@@ -1,0 +1,10 @@
+identifier: key_board/nrf52840
+name: key board
+vendor: atjialidun
+type: mcu
+arch: arm
+ram: 256
+flash: 1024
+toolchain:
+  - zephyr
+supported: []

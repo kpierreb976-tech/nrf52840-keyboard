@@ -1,14 +1,21 @@
-/*
- * Copyright (c) 2012-2014 Wind River Systems, Inc.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
+#include <app_event_manager.h>
 
-#include <stdio.h>
+#define MODULE main
+#include <caf/events/module_state_event.h>
+
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(MODULE);
 
 int main(void)
 {
-	printf("Hello World! %s\n", CONFIG_BOARD_TARGET);
+	if (app_event_manager_init())
+	{
+		LOG_ERR("Application Event Manager not initialized");
+	}
+	else
+	{
+		module_set_state(MODULE_STATE_READY);
+	}
 
 	return 0;
 }
