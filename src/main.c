@@ -11,24 +11,25 @@ LOG_MODULE_REGISTER(MODULE);
 
 int main(void)
 {
-	if (app_event_manager_init())
-	{
-		LOG_ERR("Application Event Manager not initialized");
-	}
-	else
-	{
-		module_set_state(MODULE_STATE_READY);
-	}
+    if (app_event_manager_init())
+    {
+        LOG_ERR("Application Event Manager not initialized");
+    }
+    else
+    {
+        module_set_state(MODULE_STATE_READY);
+    }
 
-	if (power_mgmt_init() != 0)
-	{
-		LOG_ERR("Power management init failed");
-	}
+    if (power_mgmt_init() != 0)
+    {
 
-	if (mode_switch_init() != 0)
-	{
-		LOG_ERR("Mode switch detection init failed");
-	}
+        LOG_ERR("Power management init failed");
+    }
 
-	return 0;
+    if (mode_switch_init() != 0)
+    {
+        LOG_ERR("Mode switch detection init failed");
+    }
+
+    return 0;
 }

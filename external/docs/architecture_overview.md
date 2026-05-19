@@ -33,9 +33,9 @@
 │                    设备树层 (Device Tree / .overlay)                   │
 │                                                                      │
 │   mode_sense: voltage-divider    vbatt: voltage-divider               │
-│   ├── output-ohms: 100k         ├── output-ohms: 470k                │
-│   ├── full-ohms: 200k           ├── full-ohms: 1000k                 │
-│   └── power-gpios: P0.13        └── power-gpios: P1.10               │
+│   ├── output-ohms: 100k         ├── output-ohms: 100k                │
+│   ├── full-ohms: 200k           ├── full-ohms: 200k                 │
+│   └── power-gpios: P0.13        └── power-gpios: P0.09 (NFC1)        │
 │                                                                      │
 │   ip5305t: i2c-device           gpio0: gpio-controller               │
 │   ├── reg: 0x75                 ├── P0.10: VBUS 插入检测             │
