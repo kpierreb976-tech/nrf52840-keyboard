@@ -25,7 +25,13 @@
       "Read(//c/nrf/**)",
       "PowerShell($env:ZEPHYR_BASE)",
       "PowerShell($env:PATH = \"C:\\\\ncs\\\\toolchains\\\\fd21892d0f\\\\opt\\\\bin;\" + $env:PATH; python -m west --help 2>&1 | Select-Object -First 5)",
-      "PowerShell($env:PATH = \"C:\\\\ncs\\\\toolchains\\\\fd21892d0f\\\\opt\\\\bin;\" + $env:PATH; python -m west -w \"C:\\\\ncs\\\\v3.2.3\" build -p always -b key_board --build-dir \"C:\\\\NRF\\\\KEYBOARD\\\\build\\\\KEYBOARD\" \"C:\\\\NRF\\\\KEYBOARD\" -- -DBOARD_ROOT=\"C:\\\\NRF\\\\KEYBOARD\\\\boards\" -DZEPHYR_BASE=\"C:\\\\ncs\\\\v3.2.3\\\\zephyr\" 2>&1)"
+      "PowerShell($env:PATH = \"C:\\\\ncs\\\\toolchains\\\\fd21892d0f\\\\opt\\\\bin;\" + $env:PATH; python -m west -w \"C:\\\\ncs\\\\v3.2.3\" build -p always -b key_board --build-dir \"C:\\\\NRF\\\\KEYBOARD\\\\build\\\\KEYBOARD\" \"C:\\\\NRF\\\\KEYBOARD\" -- -DBOARD_ROOT=\"C:\\\\NRF\\\\KEYBOARD\\\\boards\" -DZEPHYR_BASE=\"C:\\\\ncs\\\\v3.2.3\\\\zephyr\" 2>&1)",
+      "Bash(export ZEPHYR_BASE=/mnt/c/ncs/v3.2.3/zephyr)",
+      "Bash(/mnt/c/ncs/v3.2.3/toolchains/opt/bin/cargo)",
+      "PowerShell(ninja *)",
+      "Bash(west build *)",
+      "PowerShell(west build *)",
+      "PowerShell(python -c \"import west; print\\(west.__file__\\)\" 2>&1)"
     ]
   }
 }

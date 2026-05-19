@@ -7,4 +7,4 @@ project(KEYBOARD)
 
 zephyr_include_directories(inc)
 
-target_sources(app PRIVATE src/main.c src/battery.c src/mode_switch.c src/power_mgmt.c src/events/battery_event.c src/events/mode_event.c)
+target_sources(app PRIVATE src/main.c src/battery.c src/mode_switch.c src/power_mgmt.c src/events/battery_event.c src/events/mode_event.c src/events/encoder_event.c src/events/encoder_mapper.c src/encoder.c)

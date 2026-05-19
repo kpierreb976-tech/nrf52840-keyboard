@@ -40,15 +40,6 @@
     };
 
     /*
-     * VBUS detection GPIO — P0.10.
-     * USB 5V present → high; absent → low.
-     * Internal pull-down ensures stable low when no USB is connected.
-     */
-    vbus_detect: vbus-detect {
-        gpios = <&gpio0 10 GPIO_PULL_DOWN>;
-    };
-
-    /*
      * IP5305T WAKEUP control GPIO — P0.22.
      * Output, initially high. A periodic low pulse (~200μs) every ~2s
      * keeps the IP5305T from entering sleep mode.
@@ -98,7 +89,26 @@
     };
 };
 
-/* 强制释放 NFC 引脚 (P0.09, P0.10) 为 GPIO */
+/*
+ * QDEC 旋转编码器 — EC11 (P0.10=A相, P1.06=B相)
+ * P0.10 原为 VBUS 检测 GPIO，现已迁移至 USBD 硬件事件检测，归还给 QDEC。
+ * led-pre=4: 硬件每累积 4 steps (1 detent) 触发 SENSOR_TRIG_DATA_READY 中断。
+ */
+&qdec {
+    status = "okay";
+    led-pre = <4>;
+    steps = <80>;
+    pinctrl-0 = <&qdec_default>;
+    pinctrl-1 = <&qdec_sleep>;
+    pinctrl-names = "default", "sleep";
+};
+
+/* 使能 USBD 外设用于 VBUS 硬件检测 (USBDETECTED/USBREMOVED) */
+&usbd {
+    status = "okay";
+};
+
+/* 释放 NFC 引脚 P0.09 为 GPIO（BAT_ADC_EN 仍需使用） */
 &uicr {
     nfct-pins-as-gpios;
 };

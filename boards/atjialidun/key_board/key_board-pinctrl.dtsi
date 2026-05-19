@@ -1,15 +1,34 @@
 &pinctrl {
-	i2c0_default: i2c0_default {
-		group1 {
-			psels = <NRF_PSEL(TWIM_SDA, 1, 0)>,
-			        <NRF_PSEL(TWIM_SCL, 0, 24)>;
-		};
-	};
-	i2c0_sleep: i2c0_sleep {
-		group1 {
-			psels = <NRF_PSEL(TWIM_SDA, 1, 0)>,
-			        <NRF_PSEL(TWIM_SCL, 0, 24)>;
-			low-power-enable;
-		};
-	};
+    i2c0_default: i2c0_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 1, 0)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 24)>;
+        };
+    };
+    i2c0_sleep: i2c0_sleep {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 1, 0)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 24)>;
+            low-power-enable;
+        };
+    };
+
+    /* EC11 旋转编码器: A/P0.10, B/P1.06
+     * EC11 C 脚接 GND，A/B 断开时浮空，必须使能内部上拉
+     * 以保证 QDEC 能检测到稳定的高/低电平跳变。
+     */
+    qdec_default: qdec_default {
+        group1 {
+            psels = <NRF_PSEL(QDEC_A, 0, 10)>,
+                    <NRF_PSEL(QDEC_B, 1, 6)>;
+            bias-pull-up;
+        };
+    };
+    qdec_sleep: qdec_sleep {
+        group1 {
+            psels = <NRF_PSEL_DISCONNECTED(QDEC_A)>,
+                    <NRF_PSEL_DISCONNECTED(QDEC_B)>;
+            low-power-enable;
+        };
+    };
 };

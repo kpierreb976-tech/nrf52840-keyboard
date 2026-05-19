@@ -8,6 +8,7 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/i2c.h>
+#include <zephyr/drivers/usb/usb_dc.h>
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
@@ -46,7 +47,6 @@ LOG_MODULE_REGISTER(power_mgmt, LOG_LEVEL_DBG);
 
 /* ── GPIO pin definitions (from overlay DTS) ─────────────────────────── */
 
-#define VBUS_GPIO_PIN 10
 #define WAKEUP_GPIO_PIN 22
 
 /* ── Static resources ────────────────────────────────────────────────── */
@@ -57,12 +57,6 @@ static const struct i2c_dt_spec ip5305t =
 static const struct device *const vbatt_dev =
     DEVICE_DT_GET(VBATT_NODE);
 
-static const struct gpio_dt_spec vbus_gpio = {
-    .port = DEVICE_DT_GET(DT_NODELABEL(gpio0)),
-    .pin = VBUS_GPIO_PIN,
-    .dt_flags = GPIO_PULL_DOWN,
-};
-
 static const struct gpio_dt_spec wakeup_gpio = {
     .port = DEVICE_DT_GET(DT_NODELABEL(gpio0)),
     .pin = WAKEUP_GPIO_PIN,
@@ -71,6 +65,26 @@ static const struct gpio_dt_spec wakeup_gpio = {
 
 static const struct gpio_dt_spec bat_adc_en_spec =
     GPIO_DT_SPEC_GET_BY_IDX(VBATT_NODE, power_gpios, 0);
+
+/* ── VBUS state (updated by USBD hardware event callback) ────────────── */
+
+static bool vbus_present;
+
+static void vbus_status_cb(enum usb_dc_status_code status, const uint8_t *param)
+{
+	switch (status) {
+	case USB_DC_CONNECTED:
+		vbus_present = true;
+		LOG_DBG("VBUS detected via USBD hardware");
+		break;
+	case USB_DC_DISCONNECTED:
+		vbus_present = false;
+		LOG_DBG("VBUS removed via USBD hardware");
+		break;
+	default:
+		break;
+	}
+}
 
 /* ── WAKEUP delayed work ─────────────────────────────────────────────── */
 
@@ -194,18 +208,15 @@ int power_mgmt_init(void)
 {
     int ret;
 
-    /* VBUS detect GPIO */
-    if (!gpio_is_ready_dt(&vbus_gpio))
-    {
-        LOG_ERR("VBUS GPIO not ready");
-        return -ENODEV;
-    }
-    ret = gpio_pin_configure_dt(&vbus_gpio, GPIO_INPUT);
+    /* VBUS 检测 — 通过 USBD 硬件事件 (USBDETECTED/USBREMOVED) */
+    usb_dc_set_status_callback(vbus_status_cb);
+    ret = usb_dc_attach();
     if (ret < 0)
     {
-        LOG_ERR("VBUS GPIO config failed: %d", ret);
+        LOG_ERR("USBD attach failed: %d", ret);
         return ret;
     }
+    LOG_INF("VBUS detection switched to USBD hardware event");
 
     /* BAT_ADC_EN GPIO — 控制分压电路 N-MOS 导通/关断 */
     if (!device_is_ready(bat_adc_en_spec.port))
@@ -401,15 +412,6 @@ int power_mgmt_is_fully_charged(bool *full)
 
 int power_mgmt_is_vbus_present(bool *present)
 {
-    int ret;
-
-    ret = gpio_pin_get_dt(&vbus_gpio);
-    if (ret < 0)
-    {
-        LOG_ERR("Failed to read VBUS GPIO: %d", ret);
-        return ret;
-    }
-
-    *present = (ret != 0);
+    *present = vbus_present;
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(MODULE);
 
+#include "encoder.h"
 #include "mode_switch.h"
 #include "power_mgmt.h"
 
@@ -22,8 +23,12 @@ int main(void)
 
     if (power_mgmt_init() != 0)
     {
-
         LOG_ERR("Power management init failed");
+    }
+
+    if (encoder_init() != 0)
+    {
+        LOG_ERR("Encoder init failed");
     }
 
     if (mode_switch_init() != 0)
