@@ -1,0 +1,7 @@
+﻿Designator,Pin,PinName,Net,Category,Description
+U199,1,,VDD,IC/模块,
+U199,2,,DOUT,IC/模块,
+U199,3,,GND,IC/模块,
+U199,4,,DIN,IC/模块,
+U1,1,,K1,IC/模块,
+U1,2,,K0,IC/模块,

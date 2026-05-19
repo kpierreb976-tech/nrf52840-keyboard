@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/ncs/v3.2.3/toolchain/opt/bin/**)",
+      "Read(//c/ncs/toolchains/fd21892d0f/opt/bin/**)",
+      "Read(//c/ncs/v3.2.3/.west/**)",
+      "Read(//c/ncs/**)",
+      "Bash(C:/ncs/toolchains/fd21892d0f/opt/bin/cmake.exe *)",
+      "Bash(\"C:/ncs/toolchains/fd21892d0f/opt/bin/Scripts/west.exe\" build *)",
+      "Bash(C:/ncs/toolchains/fd21892d0f/opt/bin/python.exe *)",
+      "Bash(export ZEPHYR_BASE=\"C:/ncs/v3.2.3/zephyr\")",
+      "Bash(export PATH=\"/c/ncs/toolchains/fd21892d0f/opt/bin:/c/ncs/toolchains/fd21892d0f/opt/bin/Scripts:$PATH\")",
+      "Bash(Get-ChildItem -Recurse -File \"C:\\\\NRF\\\\KEYBOARD\\\\external\")",
+      "Bash(Select-Object FullName)",
+      "PowerShell(if \\(Test-Path \"C:\\\\NRF\\\\KEYBOARD\\\\external\"\\) { Get-ChildItem -Recurse \"C:\\\\NRF\\\\KEYBOARD\\\\external\" | ForEach-Object { $_.FullName } } else { Write-Output \"external folder does not exist\" })",
+      "WebSearch",
+      "Bash(pip install *)",
+      "Bash(Get-ChildItem *)",
+      "Read(//mnt/c/NRF/KEYBOARD/**)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(where west *)",
+      "PowerShell(Get-ChildItem *)",
+      "Bash(echo \"exit: $?\")",
+      "PowerShell(Get-Command *)",
+      "Read(//c/nrf/**)",
+      "PowerShell($env:ZEPHYR_BASE)"
+    ]
+  }
+}

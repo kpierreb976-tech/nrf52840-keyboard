@@ -1,0 +1,2000 @@
+
+===== PAGE 926 =====
+7 Hardware and layout
+7.1 Pin assignments
+The pin assignment figures and tables describe the pinouts for the product variants of the chip.
+The nRF52840  device provides flexibility regarding GPIO pin routing and configuration. However, some
+pins have limitations or recommendations for pin configurations and uses.
+7.1.1 aQFN73  ball assignments
+The ball assignment figure and table in the following section describe the assignments for this variant of
+the chip.
+Figure 212: aQFN73  ball assignments, top view
+4413_417 v1.11 926
+===== PAGE 927 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+A8 P0.31
+AIN7Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+A10 P0.29
+AIN5Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+A12 P0.02
+AIN0Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+A14 P1.15 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+A16 P1.13 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+A18 DEC2 Power 1.3 V regulator supply decoupling
+A20 P1.10 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+A22 VDD Power Power supply
+A23 XC2 Analog input Connection for 32 MHz crystal
+B1 VDD Power Power supply
+B3 DCC Power DC/DC converter output
+B5 DEC4 Power 1.3 V regulator supply decoupling Must be connected to DEC6 (pin
+E24)
+B7 VSS Power Ground
+B9 P0.30
+AIN6Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+B11 P0.28
+AIN4Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+B13 P0.03
+AIN1Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+B15 P1.14 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+B17 P1.12 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+B19 P1.11 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+B24 XC1 Analog input Connection for 32 MHz crystal
+C1 DEC1 Power 1.1 V regulator supply decoupling
+D2 P0.00
+XL1Digital I/O
+Analog inputGeneral purpose I/O
+Connection for 32.768 kHz crystal
+D23 DEC3 Power Power supply, decoupling
+E24 DEC6 Power 1.3 V regulator supply decoupling Must be connected to DEC4 (pin
+B5)
+F2 P0.01
+XL2Digital I/O
+Analog inputGeneral purpose I/O
+Connection for 32.768 kHz crystal
+F23 VSS_PA Power Ground (radio supply)
+G1 P0.26 Digital I/O General purpose I/O
+H2 P0.27 Digital I/O General purpose I/O
+H23 ANT RF Single-ended radio antenna connection See Reference circuitry  on page
+937 for guidelines on how to
+ensure good RF performance
+J1 P0.04
+AIN2Digital I/O
+Analog inputGeneral purpose I/O
+Analog input
+J24 P0.10 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+4413_417 v1.11 927
+===== PAGE 928 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+NFC2 NFC input NFC antenna connection
+K2 P0.05
+AIN3Digital I/O
+Analog inputGeneral purpose I/O
+Analog input
+L1 P0.06 Digital I/O General purpose I/O
+L24 P0.09
+NFC1Digital I/O
+NFC inputGeneral purpose I/O
+NFC antenna connectionStandard drive, low frequency I/O
+only
+M2 P0.07
+TRACECLKDigital I/O
+Trace clockGeneral purpose I/O
+Trace buffer clock
+N1 P0.08 Digital I/O General purpose I/O
+N24 DEC5
+Not connectedPower 1.3 V regulator supply decoupling for build codes
+Dxx and earlier.
+Not connected for build codes Fxx and later.
+P2 P1.08 Digital I/O General purpose I/O
+P23 P1.07 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+R1 P1.09
+TRACEDATA3Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[3]
+R24 P1.06 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+T2 P0.11
+TRACEDATA2Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[2]
+T23 P1.05 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+U1 P0.12
+TRACEDATA1Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[1]
+U24 P1.04 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+V23 P1.03 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+W1 VDD Power Power supply
+W24 P1.02 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+Y2 VDDH Power High voltage power supply
+Y23 P1.01 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+AA24 SWDCLK Debug Serial wire debug clock input for debug and
+programming
+AB2 DCCH Power DC/DC converter output
+AC5 DECUSB Power USB 3.3 V regulator supply decoupling
+AC9 P0.14 Digital I/O General purpose I/O
+AC11 P0.16 Digital I/O General purpose I/O
+AC13 P0.18
+nRESETDigital I/O General purpose I/O
+Configurable as pin RESETQSPI/CSN
+AC15 P0.19 Digital I/O General purpose I/O QSPI/SCK
+AC17 P0.21 Digital I/O General purpose I/O QSPI
+AC19 P0.23 Digital I/O General purpose I/O QSPI
+AC21 P0.25 Digital I/O General purpose I/O
+AC24 SWDIO Debug Serial wire debug I/O for debug and programming
+AD2 VBUS Power 5 V input for USB 3.3 V regulator
+AD4 D- USB USB D-
+AD6 D+ USB USB D+
+4413_417 v1.11 928
+===== PAGE 929 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+AD8 P0.13 Digital I/O General purpose I/O
+AD10 P0.15 Digital I/O General purpose I/O
+AD12 P0.17 Digital I/O General purpose I/O
+AD14 VDD Power Power supply
+AD16 P0.20 Digital I/O General purpose I/O
+AD18 P0.22 Digital I/O General purpose I/O QSPI
+AD20 P0.24 Digital I/O General purpose I/O
+AD22 P1.00
+TRACEDATA0Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[0]
+Serial wire output (SWO)QSPI
+AD23 VDD Power Power supply
+Die pad VSS Power Ground pad Exposed die pad must be
+connected to ground (VSS) for
+proper device operation
+Table 61: aQFN73  ball assignments
+Note :  For more information on standard drive, see GPIO — General purpose input/output  on page
+322. Low frequency I/O is a signal with a frequency up to 10 kHz.
+7.1.2 QFN48 pin assignments
+The pin assignment figure and table describe the assignments for this variant of the chip.
+Note :  VDD and VDDH are shortcircuited inside the package. Therefore the device is only usable in
+Normal Voltage supply mode, and not High Voltage supply mode.
+nRF5102
+QFN481
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+1217181920
+1314151621222324252627282930313233343536373839404142434445464748
+exposed die padN52840
+QFN48
+Figure 213: QFN48 pin assignments, top view
+4413_417 v1.11 929
+===== PAGE 930 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+Left side of the chip
+1 DEC1 Power 1.1 V Digital supply decoupling
+2 P0.00
+XL1Digital I/O
+Analog inputGeneral purpose I/O
+Connection for 32.768 kHz crystal
+3 P0.01
+XL2Digital I/O
+Analog inputGeneral purpose I/O
+Connection for 32.768 kHz crystal
+4 P0.04
+AIN2Digital I/O
+Analog inputGeneral purpose I/O
+Analog input
+5 P0.05
+AIN3Digital I/O
+Analog inputGeneral purpose I/O
+Analog input
+6 P0.07
+TRACECLKDigital I/O
+Trace clockGeneral purpose I/O
+Trace buffer clock
+7 P0.08 Digital I/O General purpose I/O
+8 P1.08 Digital I/O General purpose I/O
+9 P1.09
+TRACEDATA3Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[3]
+10 P0.11
+TRACEDATA2Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[2]
+11 P0.12
+TRACEDATA1Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[1]
+12 VDD Power Power supply
+Bottom side of chip
+13 P0.13 Digital I/O General purpose I/O
+14 P0.14 Digital I/O General purpose I/O
+15 P0.17 Digital I/O General purpose I/O
+16 P0.18
+nRESETDigital I/O General purpose I/O
+Configurable as pin RESETQSPI/CSN
+17 VDD Power Power supply
+18 P0.19 Digital I/O General purpose I/O QSPI/SCK
+19 P0.20 Digital I/O General purpose I/O
+20 P0.21 Digital I/O General purpose I/O QSPI
+21 P0.22 Digital I/O General purpose I/O QSPI
+22 P0.23 Digital I/O General purpose I/O QSPI
+23 P0.24 Digital I/O General purpose I/O
+24 P1.00
+TRACEDATA0Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[0]
+Serial wire output (SWO)QSPI
+Right side of the chip
+25 VDD Power Power supply
+26 SWDIO Debug Serial wire debug I/O for debug and programming
+27 SWDCLK Debug Serial wire debug clock input for debug and
+programming
+28 NC Not connected
+29 P0.09
+NFC1Digital I/O
+NFC inputGeneral purpose I/O
+NFC antenna connectionStandard drive, low frequency I/O
+only
+30 P0.10
+NFC2Digital I/O
+NFC inputGeneral purpose I/O
+NFC antenna connectionStandard drive, low frequency I/O
+only
+4413_417 v1.11 930
+===== PAGE 931 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+31 ANT RF Single-ended radio antenna connection See Reference circuitry  on page
+937 for guidelines on how to
+ensure good RF performance
+32 VSS_PA Power Ground (radio supply)
+33 DEC6 Power 1.3 V regulator supply decoupling Must be connected to DEC4 (pin
+46)
+34 DEC3 Power Power supply, decoupling
+35 XC1 Analog input Connection for 32 MHz crystal
+36 XC2 Analog input Connection for 32 MHz crystal
+Top side of the chip
+37 VDD Power Power supply
+38 P1.15 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+39 P0.03
+AIN1Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+40 P0.02
+AIN0Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+41 P0.28
+AIN4Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+42 P0.29
+AIN5Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+43 P0.30
+AIN6Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+44 P0.31
+AIN7Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+45 VSS Power Ground
+46 DEC4 Power 1.3 V regulator supply decoupling Must be connected to DEC6 (pin
+33)
+47 DCC Power DC/DC converter output
+48 VDD Power Power supply
+Backside of the chip
+Die pad VSS Power Ground pad Exposed die pad must be
+connected to ground (VSS) for
+proper device operation
+Table 62: QFN48 pin assignments
+7.1.3 WLCSP ball assignments
+The ball assignment figure and table describe the assignments for this variant of the chip.
+4413_417 v1.11 931
+===== PAGE 932 =====
+Hardware and layout
+Figure 214: WLCSP ball assignments, top view
+4413_417 v1.11 932
+===== PAGE 933 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+A1 XC1 Analog input Connection for 32 MHz crystal
+A2 XC2 Analog input Connection for 32 MHz crystal
+A3 P1.11 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+A4 P1.13 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+A5 P0.03
+AIN1Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+A6 P0.28
+AIN4Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+A7 P0.30
+AIN6Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+A8 DEC4 Power 1.3 V regulator supply decoupling
+Must be connected to DEC6 (pin C2)
+A9 DCC Power DC/DC converter output
+A10 DEC1 Power 1.1 V regulator supply decoupling
+B3 VDD Power Power supply
+B4 P1.10 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+B5 P1.14 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+B6 P0.02
+AIN0Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+B7 VSS Power Ground
+B8 VDD Power Power supply
+B9 P0.00
+XL1Digital I/O
+Analog inputGeneral purpose I/O
+Connection for 32.768 kHz crystal
+B10 P0.01
+XL2Digital I/O
+Analog inputGeneral purpose I/O
+Connection for 32.768 kHz crystal
+C1 VSS_PA Power Ground (radio supply)
+C2 DEC6 Power 1.3 V regulator supply decoupling
+Must be connected to DEC4 (pin A8)
+C4 VSS Power Ground
+C5 P1.12 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+C6 P1.15 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+C7 P0.29
+AIN5Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+C8 P0.31
+AIN7Digital I/O
+Analog inputGeneral purpose I/O
+Analog inputStandard drive, low frequency I/O
+only
+C9 P0.26 Digital I/O General purpose I/O
+C10 P0.04
+AIN2Digital I/O
+Analog inputGeneral purpose I/O
+Analog input
+D3 VSS Power Ground
+D4 VSS Power Ground
+D5 VSS Power Ground
+D6 VSS Power Ground
+D7 VSS Power Ground
+D8 VSS Power Ground
+4413_417 v1.11 933
+===== PAGE 934 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+D9 P0.27 Digital I/O General purpose I/O
+D10 P0.05
+AIN3Digital I/O
+Analog inputGeneral purpose I/O
+Analog input
+E1 ANT RF Single-ended radio antenna connection See Reference circuitry  on page
+937 for guidelines on how to
+ensure good RF performance
+E2 P0.10
+NFC2Digital I/O
+NFC inputGeneral purpose I/O
+NFC antenna connectionStandard drive, low frequency I/O
+only
+E3 P1.06 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+E4 VSS Power Ground
+E5 VSS Power Ground
+E6 VSS Power Ground
+E7 VSS Power Ground
+E8 VSS Power Ground
+E9 P0.06 Digital I/O General purpose I/O
+E10 P0.08 Digital I/O General purpose I/O
+F1 P0.09
+NFC1Digital I/O
+NFC inputGeneral purpose I/O
+NFC antenna connectionStandard drive, low frequency I/O
+only
+F2 DEC5
+Not connectedPower 1.3 V regulator supply decoupling for build codes
+Dxx and earlier.
+Not connected for build codes Fxx and later.
+F3 P1.03 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+F4 VSS Power Ground
+F5 VSS Power Ground
+F6 VSS Power Ground
+F7 VSS Power Ground
+F8 VSS Power Ground
+F9 P0.07
+TRACECLKDigital I/O
+Trace clockGeneral purpose I/O
+Trace buffer clock
+F10 P1.09
+TRACEDATA3Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[3]
+G1 P1.07 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+G2 P1.05 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+G3 P1.02 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+G4 VSS Power Ground
+G5 VSS Power Ground
+G6 VSS Power Ground
+G7 VSS Power Ground
+G8 VSS Power Ground
+G9 P1.08 Digital I/O General purpose I/O
+G10 P0.12
+TRACEDATA1Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[1]
+H1 P1.04 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+H2 SWDCLK Digital input Serial wire debug clock input for debug and
+programming
+4413_417 v1.11 934
+===== PAGE 935 =====
+Hardware and layout
+Pin Name Function Description Recommended usage
+H4 P0.24 Digital I/O General purpose I/O
+H5 P0.23 Digital I/O General purpose I/O QSPI
+H6 P0.16 Digital I/O General purpose I/O
+H7 P0.13 Digital I/O General purpose I/O
+H8 P0.11
+TRACEDATA2Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[2]
+H9 DCCH Power DC/DC converter output
+H10 VDD Power Power supply
+J1 P1.01 Digital I/O General purpose I/O Standard drive, low frequency I/O
+only
+J2 SWDIO Digital I/O Serial wire debug I/O for debug and programming
+J3 P1.00
+TRACEDATA0Digital I/O
+Trace dataGeneral purpose I/O
+Trace buffer TRACEDATA[0]
+Serial wire output (SWO)QSPI
+J4 P0.21 Digital I/O General purpose I/O QSPI
+J5 P0.20 Digital I/O General purpose I/O
+J6 P0.17 Digital I/O General purpose I/O
+J7 P0.14 Digital I/O General purpose I/O
+J8 D- USB USB D-
+J9 VBUS Power 5 V input for USB 3.3 V regulator
+J10 VDDH Power High voltage power supply
+K1 VDD Power Power supply
+K2 P0.25 Digital I/O General purpose I/O
+K3 P0.22 Digital I/O General purpose I/O QSPI
+K4 P0.19 Digital I/O General purpose I/O QSPI/SCK
+K5 VDD Power Power supply
+K6 P0.18
+nRESETDigital I/O General purpose I/O
+Configurable as pin resetQSPI/CSN
+K7 P0.15 Digital I/O General purpose I/O
+K8 D+ USB USB D+
+K9 DECUSB Power USB 3.3 V regulator supply decoupling
+K10 VSS Power Ground
+Table 63: WLCSP ball assignments
+Note :  For more information on standard drive, see GPIO — General purpose input/output  on page
+322. Low frequency I/O is a signal with a frequency up to 10 kHz.
+7.2 Mechanical specifications
+The mechanical specifications for the packages show the dimensions in millimeters.
+7.2.1 aQFN73  7 x 7 mm package
+Dimensions in millimeters for the aQFN 73 7 x 7 mm package.
+4413_417 v1.11 935
+===== PAGE 936 =====
+Hardware and layout
+Figure 215: aQFN73  7 x 7 mm package
+A A1 A2 A3 b D, E D2, E2 e e1 e2
+Min. 0.00 0.20 6.90 4.75
+Nom. 0.675 0.13 0.25 7.00 4.85 0.50 2.75 0.559
+Max. 0.85 0.08 0.30 7.10 4.95
+Table 64: aQFN73  dimensions in millimeters
+7.2.2 QFN48 6 x 6 mm package
+Dimensions in millimeters for the QFN48 6 x 6 mm package.
+Figure 216: QFN48 6 x 6 mm package
+4413_417 v1.11 936
+===== PAGE 937 =====
+Hardware and layout
+A A1 A3 b D, E D2, E2 e K L
+Min. 0.80 0.00 0.15 5.9 4.5 0.2 0.35
+Nom. 0.85 0.035 0.203 0.20 6.0 4.6 0.4 0.40
+Max. 0.90 0.05 0.25 6.1 4.7 0.45
+Table 65: QFN48 dimensions in millimeters
+7.2.3 WLCSP 3.544 x 3.607 mm package
+Dimensions in millimeters for the WLCSP 3.544 x 3.607 mm package.
+Figure 217: WLCSP 3.544 x 3.607 mm package
+A A1 A3 b D E D2 E2 e K L
+Min. 0.464 0.148 0.303 0.184 3.514 3.577
+Nom. 0.489 0.325 3.544 3.607 3.15 3.15 0.35 1.575 1.575
+Max. 0.514 0.18 0.347 0.244 3.574 3.637
+Table 66: WLCSP dimensions in millimeters
+7.3 Reference circuitry
+To ensure good RF performance when designing PCBs, it is highly recommended to use the PCB layouts
+and component values provided by Nordic Semiconductor.
+Documentation for the different package reference circuits, including Altium Designer files, PCB
+layout files, and PCB production files can be downloaded from the product page for the nRF52840  on
+www.nordicsemi.com .
+In this section there are reference circuits for QIAA aQFN73 , QFAA QFN48, and CKAA WLCSP showing the
+components and component values to support on-chip features in a design.
+Note :  This is not a complete list of configurations, but all required circuitry is shown for further
+configurations.
+Some general guidance is summarized here:
+4413_417 v1.11 937
+===== PAGE 938 =====
+Hardware and layout
+•External supply from VDD is only available when power is supplied to VDDH. External supply is
+annotated with the VEXT net name.
+•When supplying power from a USB source only, VBUS must be connected to VDDH if USB is to be used.
+•Components required for DC/DC function are only needed if DC/DC mode is enabled for that regulator.
+•NFC can be used in any configuration.
+•USB can be used in any configuration as long as VBUS is supplied by the USB host.
+•The schematics include an optional series resistor on the USB supply for improved immunity to
+transient overvoltage during VBUS connection. Using the series resistor is recommended for new
+designs.
+•Two component values for the RF-Match network for the QIAA aQFN73  package are given and referred
+to as v1.0 and v1.1 in the following tables. The reference schematics use v1.1 component values, which
+are recommended for new designs to improve the margin for spurious emissions during regulatory
+approval tests. However, both v1.0 and v1.1 are valid and can be used. All other RF parameters are
+unchanged.
+•A new reference design with four-component RF match has been added for the QIAA aQFN 73 package.
+The four-component RF match improves harmonic suppression when using Radio with TXPOWER equal
+to 5dBm or above. However, previous 3 component RF-match designs are valid and can be used. Using
+this four-component RF match is recommended for new designs.
+Circuit configurations for QIAA aQFN73
+Supply configuration Features that can be enabled for each configuration
+exampleConfig no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 1 USB (VDDH =
+VBUS)N/A Yes No No Yes No
+Config. 2 Battery/Ext.
+regulatorN/A Yes No No Yes No
+Config. 3 N/A Battery/
+Ext.
+regulatorNo No No Yes No
+Config. 4 Battery/Ext.
+regulatorN/A Yes Yes Yes Yes No
+Config. 5 N/A Battery/
+Ext.
+regulatorNo No Yes Yes Yes
+Config. 6 N/A Battery/
+Ext.
+regulatorNo No No No No
+Config. 71 Battery/Ext.
+regulatorN/A Yes Yes Yes Yes No
+Table 67: Circuit configurations
+1Reference design with four-component RF match.
+4413_417 v1.11 938
+===== PAGE 939 =====
+Hardware and layout
+Circuit configurations for QFAA QFN48
+Supply configuration Features that can be enabled for each configuration
+exampleConfig no.
+VDDH1 VDD EXTSUPPLY2DCDCEN03DCDCEN1 USB4NFC
+Config. 1 N/A Battery/Ext.
+regulatorN/A N/A Yes N/A No
+Table 68: Circuit configurations
+1High Voltage supply mode cannot be used because the VDDH pin is not routed in the QFN48 package.
+2The external supply feature cannot be used because the VDDH pin is not routed in the QFN48 package.
+3DCDC for REG0 stage cannot be used because the VDDH pin is not routed in the QFN48 package.
+4USBD cannot be used because the USB pins are not routed in the QFN48 package.
+Circuit configurations for CKAA WLCSP
+Supply configuration Features that can be enabled for each configuration
+exampleConfig no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 1 USB (VDDH =
+VBUS)N/A Yes No No Yes No
+Config. 2 Battery/Ext.
+regulatorN/A Yes No No Yes No
+Config. 3 N/A Battery/Ext.
+regulatorNo No No Yes No
+Config. 4 Battery/Ext.
+regulatorN/A Yes Yes Yes Yes No
+Config. 5 N/A Battery/Ext.
+regulatorNo No Yes Yes Yes
+Config. 6 N/A Battery/Ext.
+regulatorNo No No No No
+Table 69: Circuit configurations
+7.3.1 Circuit configuration no. 1 for QIAA aQFN73
+Circuit configuration number 1 for QIAA aQFN73 , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 1 USB (VDDH = VBUS) N/A Yes No No Yes No
+Table 70: Configuration summary for circuit configuration no. 1
+4413_417 v1.11 939
+===== PAGE 940 =====
+Hardware and layout
+X1
+32MHzC1
+12pFC2
+12pF
+C11
+100pFC5
+100nF
+C20
+4.7µFXC1XC2VDD_nRF
+P0.07P0.10/NFC2
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10DEC1
+SWDCLKSWDIOC15
+1.0µF
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VBUS_nRFVDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3 P0.09/NFC1C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+VDD_nRF
+C7
+100nFD+D-VDD_nRF
+C8
+100nFP1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C19
+4.7µFC14
+1.0µF
+C6
+4.7µFVBUS_nRFVEXTDEC4_6DEC4_6
+C3
+0.8pFL1
+4.7nHRF
+C4
+0.5pFC22
+N.C.DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAAVBUS
+OptionalR1
+2R2Not required for Fxx and laterC9
+820pF
+Figure 218: Circuit configuration no. 1 schematic
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 940
+===== PAGE 941 =====
+Hardware and layout
+Designator Value v1.0 Value v1.1 Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF 0.8 pF Capacitor, NP0, ±10% 0402
+C4 1 pF 0.5 pF Capacitor, NP0, ±10% 0402
+C5, C7, C8,
+C12100 nF Capacitor, X7R, ±10% 0402
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, NP0, ±5%
+Not required for Fxx and later0402
+C10, C13,
+C22N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C19 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH 4.7 nH High frequency chip inductor ±5% 0402
+R1 2R2 Resistor ±1%, 0.063W 0402
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE
+802.15.4, ANT, and 2.4 GHz proprietary
+System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol:
+±40 ppmXTAL_2016
+X2 32.768 kHz XTAL SMD 3215, 32.768 kHz, Cl=9 pF, Total
+Tol: ±50 ppmXTAL_3215
+Table 71: Bill of material for circuit configuration no. 1
+7.3.2 Circuit configuration no. 2 for QIAA aQFN73
+Circuit configuration number 2 for QIAA aQFN73 , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 2 Battery/Ext.
+regulatorN/A Yes No No Yes No
+Table 72: Configuration summary for circuit configuration no. 2
+4413_417 v1.11 941
+===== PAGE 942 =====
+Hardware and layout
+C21
+4.7µFX1
+32MHzC1
+12pFC2
+12pF
+C11
+100pF
+C20
+4.7µFXC1XC2
+P0.07P0.10/NFC2
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10
+SWDCLKSWDIOC15
+1.0µF
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VBUSVDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3 P0.09/NFC1C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+VDD_nRF
+C7
+100nFD+D-VDD_nRF
+C8
+100nFP1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C19
+4.7µFC6
+4.7µFVDDHVEXTDEC4_6DEC4_6
+C5
+100nFVDD_nRF
+DEC1
+C14
+1.0µF
+C3
+0.8pFL1
+4.7nHRF
+C4
+0.5pFC22
+N.C.DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAANot required for Fxx and laterC9
+820pF
+Figure 219: Circuit configuration no. 2 schematic
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 942
+===== PAGE 943 =====
+Hardware and layout
+Designator Value v1.0 Value v1.1 Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF 0.8 pF Capacitor, NP0, ±10% 0402
+C4 1 pF 0.5 pF Capacitor, NP0, ±10% 0402
+C5, C7, C8,
+C12100 nF Capacitor, X7R, ±10% 0402
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, NP0, ±5%
+Not required for Fxx and later0402
+C10, C13,
+C22N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C19, C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH 4.7 nH High frequency chip inductor ±5% 0402
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE
+802.15.4, ANT, and 2.4 GHz proprietary
+System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol:
+±40 ppmXTAL_2016
+X2 32.768 kHz XTAL SMD 3215, 32.768 kHz, Cl=9 pF, Total
+Tol: ±50 ppmXTAL_3215
+Table 73: Bill of material for circuit configuration no. 2
+7.3.3 Circuit configuration no. 3 for QIAA aQFN73
+Circuit configuration number 3 for QIAA aQFN73 , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 3 N/A Battery/Ext.
+regulatorNo No No Yes No
+Table 74: Configuration summary for circuit configuration no. 3
+4413_417 v1.11 943
+===== PAGE 944 =====
+Hardware and layout
+C21
+4.7µFX1
+32MHzC1
+12pFC2
+12pF
+C11
+100pF
+C20
+4.7µFXC1XC2
+P0.07P0.10/NFC2
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10
+SWDCLKSWDIOC15
+1.0µF
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VBUSVDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3 P0.09/NFC1C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+VDD_nRF
+C7
+100nFD+D-VDD_nRF
+C8
+100nFP1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C6
+4.7µFDEC4_6DEC4_6
+C5
+100nFVDD_nRF
+DEC1
+C14
+1.0µF
+C3
+0.8pFL1
+4.7nHRF
+C4
+0.5pFC22
+N.C.DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAANot required for Fxx and laterC9
+820pF
+Figure 220: Circuit configuration no. 3 schematic
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 944
+===== PAGE 945 =====
+Hardware and layout
+Designator Value v1.0 Value v1.1 Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF 0.8 pF Capacitor, NP0, ±10% 0402
+C4 1 pF 0.5 pF Capacitor, NP0, ±10% 0402
+C5, C7, C8,
+C12100 nF Capacitor, X7R, ±10% 0402
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, NP0, ±5%
+Not required for Fxx and later0402
+C10, C13,
+C22N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH 4.7 nH High frequency chip inductor ±5% 0402
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE
+802.15.4, ANT, and 2.4 GHz proprietary
+System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol:
+±40 ppmXTAL_2016
+X2 32.768 kHz XTAL SMD 3215, 32.768 kHz, Cl=9 pF, Total
+Tol: ±50 ppmXTAL_3215
+Table 75: Bill of material for circuit configuration no. 3
+7.3.4 Circuit configuration no. 4 for QIAA aQFN73
+Circuit configuration number 4 for QIAA aQFN73 , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 4 Battery/Ext.
+regulatorN/A Yes Yes Yes Yes No
+Table 76: Configuration summary for circuit configuration no. 4
+4413_417 v1.11 945
+===== PAGE 946 =====
+Hardware and layout
+X1
+32MHzC1
+12pFC2
+12pF
+C11
+100pF
+C20
+4.7µFXC1XC2
+P0.07P0.10/NFC2
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10
+SWDCLKSWDIOL2
+10µHC15
+1.0µFL3
+15nH
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VBUSVDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3 P0.09/NFC1C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+L4 10µH VDD_HV
+VDD_nRF
+C7
+100nFC21
+4.7µF
+D+D-VDD_nRF
+C8
+100nFNot required for Fxx and laterC9
+820pF
+P1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C19
+4.7µFC6
+4.7µFVEXTC16
+47nF
+DEC4_6DEC4_6
+C5
+100nFVDD_nRF
+DEC1
+C14
+1.0µF
+C3
+0.8pFL1
+4.7nHRF
+C4
+0.5pFC22
+N.C.DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAA
+Figure 221: Circuit configuration no. 4 schematic for QIAA aQFN73
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 946
+===== PAGE 947 =====
+Hardware and layout
+Designator Value v1.0 Value v1.1 Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF 0.8 pF Capacitor, NP0, ±10% 0402
+C4 1 pF 0.5 pF Capacitor, NP0, ±10% 0402
+C5, C7, C8,
+C12100 nF Capacitor, X7R, ±10% 0402
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, NP0, ±5%
+Not required for Fxx and later0402
+C10, C13,
+C22N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C16 47 nF Capacitor, X7R, ±10% 0402
+C19, C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH 4.7 nH High frequency chip inductor ±5% 0402
+L2 10 µH Chip inductor, IDC, min = 50 mA, ±20% 0603
+L3 15 nH High frequency chip inductor ±10% 0402
+L4 10 µH Chip inductor, IDC, min = 80 mA, ±20% 0603
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE
+802.15.4, ANT, and 2.4 GHz proprietary
+System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol:
+±40 ppmXTAL_2016
+X2 32.768 kHz XTAL SMD 3215, 32.768 kHz, Cl=9 pF, Total
+Tol: ±50 ppmXTAL_3215
+Table 77: Bill of material for circuit configuration no. 4
+7.3.5 Circuit configuration no. 5 for QIAA aQFN73
+Circuit configuration number 5 for QIAA aQFN73 , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 5 N/A Battery/Ext.
+regulatorNo No Yes Yes Yes
+Table 78: Configuration summary for circuit configuration no. 5
+4413_417 v1.11 947
+===== PAGE 948 =====
+Hardware and layout
+X1
+32MHzC1
+12pFC2
+12pF
+C11
+100pF
+C20
+4.7µFXC1XC2
+P0.07
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10
+SWDCLKSWDIOL2
+10µHC15
+1.0µFL3
+15nH
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VBUSVDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+VDD_nRF
+C7
+100nFC21
+4.7µF
+D+D-VDD_nRF
+C8
+100nFP1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C6
+4.7µFNFC1NFC2
+CT1CT3
+Note:
+The value of CT1, CT2, CT3 and CT4 must be
+tuned to match the selected NFC antenna.C16
+47nF
+DEC4_6DEC4_6
+CT2CT4C5
+100nFVDD_nRF
+DEC1
+C14
+1.0µF
+C3
+0.8pFL1
+4.7nHRF
+C4
+0.5pFC22
+N.C.DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAANot required for Fxx and laterC9
+820pF
+Figure 222: Circuit configuration no. 5 schematic
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 948
+===== PAGE 949 =====
+Hardware and layout
+Designator Value v1.0 Value v1.1 Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF 0.8 pF Capacitor, NP0, ±10% 0402
+C4 1 pF 0.5 pF Capacitor, NP0, ±10% 0402
+C5, C7, C8,
+C12100 nF Capacitor, X7R, ±10% 0402
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pF Capacitor, NP0, ±5% 0402
+C10, C13,
+C22N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C16 47 nF Capacitor, X7R, ±10% 0402
+C21 4.7 µF Capacitor, X7S, ±10% 0603
+CT1, CT2,
+CT3, CT4Antenna dependent Capacitor, NP0, ±5% 0402
+L1 3.9 nH 4.7 nH High frequency chip inductor ±5% 0402
+L2 10 µH Chip inductor, IDC, min = 50 mA, ±20% 0603
+L3 15 nH High frequency chip inductor ±10% 0402
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE
+802.15.4, ANT, and 2.4 GHz proprietary
+System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol:
+±40 ppmXTAL_2016
+X2 32.768 kHz XTAL 3215, 32.768 kHz, Cl=9 pF, Total Tol:
+±50 ppmXTAL_3215
+Table 79: Bill of material for circuit configuration no. 5
+7.3.6 Circuit configuration no. 6 for QIAA aQFN73
+Circuit configuration number 6 for QIAA aQFN73 , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 6 N/A Battery/Ext.
+regulatorNo No No No No
+Table 80: Configuration summary for circuit configuration no. 6
+4413_417 v1.11 949
+===== PAGE 950 =====
+Hardware and layout
+X1
+32MHzC1
+12pFC2
+12pF
+C11
+100pF
+XC1XC2
+P0.07P0.10/NFC2
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10
+SWDCLKSWDIOC15
+1.0µF
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3 P0.09/NFC1C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+VDD_nRF
+C7
+100nFVDD_nRF
+C8
+100nFP1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C6
+4.7µFDEC4_6DEC4_6
+C5
+100nFVDD_nRF
+DEC1
+C14
+1.0µF
+C3
+0.8pFL1
+4.7nHRF
+C4
+0.5pFC22
+N.C.DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAANot required for Fxx and laterC9
+820pF
+Figure 223: Circuit configuration no. 6 schematic
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 950
+===== PAGE 951 =====
+Hardware and layout
+Designator Value v1.0 Value v1.1 Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF 0.8 pF Capacitor, NP0, ±10% 0402
+C4 1 pF 0.5 pF Capacitor, NP0, ±10% 0402
+C5, C7, C8,
+C12100 nF Capacitor, X7R, ±10% 0402
+C6 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, NP0, ±5%
+Not required for Fxx and later0402
+C10, C13,
+C22N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+L1 3.9 nH 4.7 nH High frequency chip inductor ±5% 0402
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE
+802.15.4, ANT, and 2.4 GHz proprietary
+System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol:
+±40 ppmXTAL_2016
+X2 32.768 kHz XTAL SMD 3215, 32.768 kHz, Cl=9 pF, Total
+Tol: ±50 ppmXTAL_3215
+Table 81: Bill of material for circuit configuration no. 6
+7.3.7 Circuit configuration no. 7 for QIAA aQFN73
+Circuit configuration number 7 for QIAA aQFN73 , showing the schematic and the bill of materials.
+This circuit configuration includes a four-component RF match for improved harmonic suppression when
+using RADIO with TXPOWER ≥ 5 dBm.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 7 Battery/Ext.
+regulatorN/A Yes Yes Yes Yes No
+Table 82: Configuration summary for circuit configuration no. 7
+4413_417 v1.11 951
+===== PAGE 952 =====
+Hardware and layout
+X1
+32MHzC1
+12pFC2
+12pF
+C11
+100pF
+C20
+4.7µFXC1XC2
+P0.07P0.10/NFC2
+P0.11
+P0.12
+P1.00P0.18/RESET
+P0.19
+P0.20
+P0.21
+P0.22
+P0.23
+P1.10
+SWDCLKSWDIOL2
+10µHC15
+1.0µFL3
+15nH
+P1.09C10
+N.C.P0.00/XL1
+P0.01/XL2
+P0.02/AIN0
+P0.03/AIN1
+VBUSVDD_nRFDEC3
+P0.04/AIN2
+P0.05/AIN3 P0.09/NFC1C18
+12pFC17
+12pF
+X2
+32.768kHzOptional
+P1.11P1.12P1.13P1.14
+L4 10µH VDD_HV
+VDD_nRF
+C7
+100nFC21
+4.7µF
+D+D-VDD_nRF
+C8
+100nFP1.01P1.02P1.03P1.04P1.05P1.06P1.07P1.15
+P0.08
+P1.08P0.06P0.26
+P0.27
+P0.24
+P0.25P0.13
+P0.14
+P0.15
+P0.16
+P0.17C12
+100nFVDD_nRFC13
+N.C.P0.28/AIN4P0.29/AIN5P0.30/AIN6P0.31/AIN7
+C19
+4.7µFC6
+4.7µFVEXTC16
+47nF
+DEC4_6DEC4_6
+C5
+100nFVDD_nRF
+DEC1
+C14
+1.0µF
+DEC1C1
+VDDW1VSS_PAF23ANTH23DEC6E24DEC3D23XC1B24XC2A23VDDA22P1.10A20
+P0.00/XL1D2
+P0.01/XL2F2
+P0.28/AIN4B11DEC4B5
+VSSB7VDDB1
+DCCB3
+SWDCLKAA24SWDIOAC24P1.01Y23D-AD4
+P0.19AC15
+nRF52840
+VDDHY2DCCHAB2
+VBUSAD2DECUSBAC5
+D+AD6
+P0.20AD16
+P0.21AC17
+P0.22AD18
+P0.23AC19
+P0.24AD20VDDAD23P0.09/NFC1L24
+P1.09R1
+P0.25AC21
+P1.00AD22P0.26G1
+P0.27H2
+P0.04/AIN2J1
+P0.05/AIN3K2
+P0.06L1
+P0.07M2
+P0.08N1
+P1.08P2
+P0.13AD8
+P0.14AC9
+P0.15AD10
+P0.16AC11P0.11T2
+P0.12U1
+P0.17AD12
+P0.18/RESETAC13DEC5N24P0.10/NFC2J24P0.03/AIN1B13P0.02/AIN0A12P0.29/AIN5A10P0.30/AIN6B9P0.31/AIN7A8
+VDDAD14P1.02W24P1.03V23P1.04U24P1.05T23P1.06R24P1.07P23P1.11B19P1.12B17P1.13A16P1.14B15P1.15A14
+DEC2A18GND74
+U1
+nRF52840-QIAARFL1
+4.7nHL5
+2.2nHC3
+1.0pFC4
+1.2pF
+Not required for Fxx and laterC9
+820pF
+Figure 224: Circuit configuration no. 7 schematic for QIAA aQFN73
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 952
+===== PAGE 953 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0402
+C3 1 pF Capacitor, NP0, ±5% 0402
+C4 1.2 pF Capacitor, NP0, ±5% 0402
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0402
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, NP0, ±5%
+Not required for Fxx and later0402
+C10, C13 N.C. Not mounted 0402
+C11 100 pF Capacitor, NP0, ±5% 0402
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C16 47 nF Capacitor, X7R, ±10% 0402
+C19, C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 4.7 nH High frequency chip inductor ±5% 0402
+L2 10 µH Chip inductor, IDC, min = 50 mA, ±20% 0603
+L3 15 nH High frequency chip inductor ±10% 0402
+L4 10 µH Chip inductor, IDC, min = 80 mA, ±20% 0603
+L5 2.2 nH High frequency chip inductor ±5% 0402
+U1 nRF52840-QIAA Multiprotocol Bluetooth  low energy, IEEE 802.15.4,
+ANT, and 2.4 GHz proprietary System on ChipAQFN-73
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40
+ppmXTAL_2016
+X2 32.768 kHz XTAL SMD 3215, 32.768 kHz, Cl=9 pF, Total Tol: ±50
+ppmXTAL_3215
+Table 83: Bill of material for circuit configuration no. 7
+7.3.8 Circuit configuration no. 1 for QFAA QFN48
+Circuit configuration number 1 for QFAA QFN48, showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 1 N/A Battery/Ext.
+regulatorN/A N/A Yes N/A No
+Table 84: Configuration summary for circuit configuration no. 1
+4413_417 v1.11 953
+===== PAGE 954 =====
+Hardware and layout
+Figure 225: Circuit configuration no. 1 schematic
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 954
+===== PAGE 955 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C16, C17 12 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±10% 0201
+C4 1.2 pF Capacitor, NP0, ±10% 0201
+C5, C6, C7, C8,
+C12100 nF Capacitor, X5R, ±10% 0201
+C10 N.C. Not mounted 0201
+C11 100 pF Capacitor, NP0, ±5% 0201
+C13, C14 1.0 µF Capacitor, X5R, ±10% 0402
+C15 47 nF Capacitor, X5R, ±10% 0201
+L1 4.7 nH High frequency chip inductor ±5% 0201
+L2 2.2 nH High frequency chip inductor ±5% 0201
+L3 10 µH Chip inductor, IDC, min = 50 mA, ±20% 0603
+L4 15 nH High frequency chip inductor ±10% 0402
+U1 nRF52840-
+QFAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4, ANT,
+and 2.4 GHz proprietary System on ChipQFN48
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±30 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50 ppm XTAL_2012
+Table 85: Bill of material for circuit configuration no. 1
+7.3.9 Circuit configuration no. 1 for CKAA WLCSP
+Circuit configuration number 1 for CKAA WLCSP , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 1 USB (VDDH = VBUS) N/A Yes No No Yes No
+Table 86: Configuration summary for circuit configuration no. 1
+4413_417 v1.11 955
+===== PAGE 956 =====
+Hardware and layout
+Figure 226: Circuit configuration no. 1 schematic for CKAA WLCSP
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 956
+===== PAGE 957 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±5% 0201
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0201
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, X7R, ±10%
+Not required for Fxx and later0201
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C19 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH High frequency chip inductor ±5% 0201
+L5 4.7 nH High frequency chip inductor ±5% 0201
+R1 2R2 Resistor, ±1%, 0.05W 0201
+U1 nRF52840-
+CKAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4,
+ANT, and 2.4 GHz proprietary System on ChipWLCSP-94
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50
+ppmXTAL_2012
+Table 87: Bill of material for circuit configuration no. 1
+7.3.10 Circuit configuration no. 2 for CKAA WLCSP
+Circuit configuration number 2 for CKAA WLCSP , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 2 Battery/Ext. regulator N/A Yes No No Yes No
+Table 88: Configuration summary for circuit configuration no. 2
+4413_417 v1.11 957
+===== PAGE 958 =====
+Hardware and layout
+Figure 227: Circuit configuration no. 2 schematic for CKAA WLCSP
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 958
+===== PAGE 959 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±5% 0201
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0201
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, X7R, ±10%
+Not required for Fxx and later0201
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C19, C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH High frequency chip inductor ±5% 0201
+L5 4.7 nH High frequency chip inductor ±5% 0201
+U1 nRF52840-
+CKAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4, ANT,
+and 2.4 GHz proprietary System on ChipWLCSP-94
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50 ppm XTAL_2012
+Table 89: Bill of material for circuit configuration no. 2
+7.3.11 Circuit configuration no. 3 for CKAA WLCSP
+Circuit configuration number 3 for CKAA WLCSP , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 3 N/A Battery/Ext.
+regulatorNo No No Yes No
+Table 90: Configuration summary for circuit configuration no. 3
+4413_417 v1.11 959
+===== PAGE 960 =====
+Hardware and layout
+Figure 228: Circuit configuration no. 3 schematic for CKAA WLCSP
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 960
+===== PAGE 961 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17, C18 12 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±5% 0201
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0201
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, X7R, ±10%
+Not required for Fxx and later0201
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH High frequency chip inductor ±5% 0201
+L5 4.7 nH High frequency chip inductor ±5% 0201
+U1 nRF52840-
+CKAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4, ANT,
+and 2.4 GHz proprietary System on ChipWLCSP-94
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50 ppm XTAL_2012
+Table 91: Bill of material for circuit configuration no. 3
+7.3.12 Circuit configuration no. 4 for CKAA WLCSP
+Circuit configuration number 4 for CKAA WLCSP , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 4 Battery/Ext.
+regulatorN/A Yes Yes Yes Yes No
+Table 92: Configuration summary for circuit configuration no. 4
+4413_417 v1.11 961
+===== PAGE 962 =====
+Hardware and layout
+Figure 229: Circuit configuration no. 4 schematic for CKAA WLCSP
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 962
+===== PAGE 963 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±5% 0201
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0201
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, X7R, ±10%
+Not required for Fxx and later0201
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C16 47 nF Capacitor, X7R, ±10% 0201
+C19, C21 4.7 µF Capacitor, X7S, ±10% 0603
+L1 3.9 nH High frequency chip inductor ±5% 0201
+L2 10 µH Chip inductor, IDC, min = 50 mA, ±20% 0603
+L3 15 nH High frequency chip inductor ±10% 0402
+L4 10 µH Chip inductor, IDC, min = 80 mA, ±10% 0603
+L5 4.7 nH High frequency chip inductor ±5% 0201
+U1 nRF52840-
+CKAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4, ANT,
+and 2.4 GHz proprietary System on ChipWLCSP-94
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50 ppm XTAL_2012
+Table 93: Bill of material for circuit configuration no. 4
+7.3.13 Circuit configuration no. 5 for CKAA WLCSP
+Circuit configuration number 5 for CKAA WLCSP , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 5 N/A Battery/Ext.
+regulatorNo No Yes Yes Yes
+Table 94: Configuration summary for circuit configuration no. 5
+4413_417 v1.11 963
+===== PAGE 964 =====
+Hardware and layout
+Figure 230: Circuit configuration no. 5 schematic for CKAA WLCSP
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 964
+===== PAGE 965 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±5% 0201
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0201
+C6, C20 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, X7R, ±10%
+Not required for Fxx and later0201
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+C16 47 nF Capacitor, X7R, ± 10% 0201
+C21 4.7 µF Capacitor, X7S, ± 10% 0603
+CT1, CT2, CT3,
+CT4Antenna
+dependentCapacitor, X7R, ± 10% 0201
+L1 3.9 nH High frequency chip inductor ±5% 0201
+L2 10 µH Chip inductor, IDC, min = 50 mA, ±20% 0603
+L3 15 nH High frequency chip inductor ±10% 0402
+L5 4.7 nH High frequency chip inductor ±5% 0201
+U1 nRF52840-
+CKAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4, ANT,
+and 2.4 GHz proprietary System on ChipWLCSP-94
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50 ppm XTAL_2012
+Table 95: Bill of material for circuit configuration no. 5
+7.3.14 Circuit configuration no. 6 for CKAA WLCSP
+Circuit configuration number 6 for CKAA WLCSP , showing the schematic and the bill of materials.
+Supply configuration Enabled features Config no.
+VDDH VDD EXTSUPPLY DCDCEN0 DCDCEN1 USB NFC
+Config. 6 N/A Battery/Ext.
+regulatorNo No No No No
+Table 96: Configuration summary for circuit configuration no. 6
+4413_417 v1.11 965
+===== PAGE 966 =====
+Hardware and layout
+Figure 231: Circuit configuration no. 6 schematic for CKAA WLCSP
+Note :  For PCB reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+4413_417 v1.11 966
+===== PAGE 967 =====
+Hardware and layout
+Designator Value Description Footprint
+C1, C2, C17,
+C1812 pF Capacitor, NP0, ±2% 0201
+C3 1.0 pF Capacitor, NP0, ±5% 0201
+C5, C7, C8, C12 100 nF Capacitor, X7R, ±10% 0201
+C6 4.7 µF Capacitor, X7R, ±10% 0603
+C9 820 pFCapacitor, X7R, ±10%
+Not required for Fxx and later0201
+C14, C15 1.0 µF Capacitor, X7R, ±10% 0603
+L1 3.9 nH High frequency chip inductor ±5% 0201
+L5 4.7 nH High frequency chip inductor ±5% 0201
+U1 nRF52840-
+CKAAMultiprotocol Bluetooth  low energy, IEEE 802.15.4, ANT,
+and 2.4 GHz proprietary System on ChipWLCSP-94
+X1 32 MHz XTAL SMD 2016, 32 MHz, Cl=8 pF, Total Tol: ±40 ppm XTAL_2016
+X2 32.768 kHz XTAL SMD 2012, 32.768 kHz, Cl=9 pF, Total Tol: ±50 ppm XTAL_2012
+Table 97: Bill of material for circuit configuration no. 6
+7.3.15 PCB guidelines
+A well designed PCB is necessary to achieve good RF performance. Poor layout can lead to loss in
+performance or functionality.
+A qualified RF layout for the IC and its surrounding components, including matching networks, can be
+downloaded from www.nordicsemi.com .
+To ensure optimal performance it is essential that you follow the schematics and layout references closely.
+Especially in the case of the antenna matching circuitry (components between device pin ANT and the
+antenna), any changes to the layout can change the behavior, resulting in degradation of RF performance
+or a need to change component values. All reference circuits are designed for use with a 50 Ω single-
+ended antenna.
+A PCB with a minimum of two layers, including a ground plane, is recommended for optimal RF
+performance. On PCBs with more than two layers, put a keep-out area on the inner layers directly below
+the antenna matching circuitry (components between device pin ANT and the antenna) to reduce the stray
+capacitances that influence RF performance.
+A matching network is needed between the RF pin ANT and the antenna, to match the antenna
+impedance (normally 50 Ω) to the optimum RF load impedance for the chip. For optimum performance,
+the impedance for the matching network should be set as described in the recommended aQFN 73
+package reference circuitry from Circuit configuration no. 1 for QIAA aQFN73  on page 939, the
+recommended QFN48 reference circuitry from Circuit configuration no. 1 for QFAA QFN48  on page 953,
+or the recommended WLCSP reference circuitry from Circuit configuration no. 1 for CKAA WLCSP  on page
+955 depending on the package variant used in your design.
+The DC supply voltage should be decoupled as close as possible to the VDD pins with high performance RF
+capacitors. See the schematics for recommended decoupling capacitor values. The supply voltage for the
+chip should be filtered and routed separately from the supply voltages of any digital circuitry.
+Long power supply lines on the PCB should be avoided. All device grounds, VDD connections, and VDD
+bypass capacitors must be connected as close as possible to the IC. For a PCB with a topside RF ground
+4413_417 v1.11 967
+===== PAGE 968 =====
+Hardware and layout
+plane, the VSS pins should be connected directly to the ground plane. For a PCB with a bottom ground
+plane, the best technique is to have via holes as close as possible to the VSS pads. A minimum of one via
+hole should be used for each VSS pin.
+Fast switching digital signals should not be routed close to the crystal or the power supply lines. Capacitive
+loading of fast switching digital output lines should be minimized in order to avoid radio interference.
+Avoid routing the 32MHz crystal lines close to antenna line and antenna ground.
+7.3.16 PCB layout example
+The PCB layout shown in the following figures is a reference layout for the aQFN™ package with internal
+LDO setup and VBUS supply.
+Note :  Pay attention to how the capacitor C3 is grounded. It is not directly connected to the ground
+plane, but grounded via VSS_PA pin F23. This is done to create additional filtering of harmonic
+components.
+For all available reference layouts, see the product page for the nRF52840  on www.nordicsemi.com .
+Figure 232: Top silk layer
+Figure 233: Top layer
+4413_417 v1.11 968
+===== PAGE 969 =====
+Hardware and layout
+Figure 234: Mid layer 1
+Figure 235: Mid layer 2
+Figure 236: Bottom layer
+Note :  No components in bottom layer.
+7.3.17 PMIC support
+The nRF52 Series is comprehensively supported by Nordic Semiconductor's own range of PMICs (Power
+Management Integrated Circuits). These PMICs are meticulously designed to enhance the performance
+and efficiency of the nRF52 Series devices. This integration ensures the longest battery life and the highest
+reliability for the end application. The synergy between the nRF52 Series and the Nordic PMICs highlights
+4413_417 v1.11 969
+===== PAGE 970 =====
+Hardware and layout
+Nordic Semiconductor's commitment to providing a complete and cohesive solution for their customers'
+needs in wireless technology applications.
+7.4 Package thermal characteristics
+A summary of the thermal characteristics for the different packages available for the IC can be found
+below.
+Symbol Package Typ. Unit
+θJA,aQFN73 aQFN73 24.11 °C/W
+θJA,QFN48 QFN48 22.37 °C/W
+θJA,WLCSP WLCSP 36.55 °C/W
+Table 98: Package thermal characteristics
+Values obtained by simulation following the EIA/JESD51-2 for still air condition using JEDEC PCB.
+7.5 Package Variation
+The following describes the variation between this specification and a specific device package.
+7.5.1 QFN48
+The following section describes the package variation of the QFN48 package.
+•The QFN48 package does not support USBD.
+•VDD and VDDH are short circuited inside the QFN48 package. Therefore the device is only usable in
+Normal Voltage supply mode, and not High Voltage supply mode. See POWER — Power supply  on page
+81 for more information.
+The parameter variation when using the QFN48 package is as following:
+Symbol Min. Typ. Max. Unit
+PSENS,IT,SP ,1M,BLE -95 dBm
+PRF 7.545 dBm
+Table 99: QFN48 package parameter variation
+45Achieved using Pos8dBm  setting in RADIO.TXPOWER
+4413_417 v1.11 970

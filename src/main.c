@@ -6,6 +6,9 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(MODULE);
 
+#include "mode_switch.h"
+#include "power_mgmt.h"
+
 int main(void)
 {
 	if (app_event_manager_init())
@@ -15,6 +18,16 @@ int main(void)
 	else
 	{
 		module_set_state(MODULE_STATE_READY);
+	}
+
+	if (power_mgmt_init() != 0)
+	{
+		LOG_ERR("Power management init failed");
+	}
+
+	if (mode_switch_init() != 0)
+	{
+		LOG_ERR("Mode switch detection init failed");
 	}
 
 	return 0;
