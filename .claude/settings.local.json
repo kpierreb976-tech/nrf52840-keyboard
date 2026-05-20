@@ -31,7 +31,10 @@
       "PowerShell(ninja *)",
       "Bash(west build *)",
       "PowerShell(west build *)",
-      "PowerShell(python -c \"import west; print\\(west.__file__\\)\" 2>&1)"
+      "PowerShell(python -c \"import west; print\\(west.__file__\\)\" 2>&1)",
+      "Bash(python3 -m west)",
+      "Bash(python -m west)",
+      "Bash(/c/ncs/toolchains/fd21892d0f/opt/bin/python.exe -m west --help)"
     ]
   }
 }

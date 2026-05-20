@@ -7,6 +7,7 @@
 LOG_MODULE_REGISTER(MODULE);
 
 #include "encoder.h"
+#include "keyboard_core.h"
 #include "mode_switch.h"
 #include "power_mgmt.h"
 
@@ -34,6 +35,11 @@ int main(void)
     if (mode_switch_init() != 0)
     {
         LOG_ERR("Mode switch detection init failed");
+    }
+
+    if (keyboard_core_init() != 0)
+    {
+        LOG_ERR("Keyboard core init failed");
     }
 
     return 0;
