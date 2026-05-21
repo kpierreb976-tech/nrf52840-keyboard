@@ -72,18 +72,19 @@ static bool vbus_present;
 
 static void vbus_status_cb(enum usb_dc_status_code status, const uint8_t *param)
 {
-	switch (status) {
-	case USB_DC_CONNECTED:
-		vbus_present = true;
-		LOG_DBG("VBUS detected via USBD hardware");
-		break;
-	case USB_DC_DISCONNECTED:
-		vbus_present = false;
-		LOG_DBG("VBUS removed via USBD hardware");
-		break;
-	default:
-		break;
-	}
+    switch (status)
+    {
+    case USB_DC_CONNECTED:
+        vbus_present = true;
+        LOG_DBG("VBUS detected via USBD hardware");
+        break;
+    case USB_DC_DISCONNECTED:
+        vbus_present = false;
+        LOG_DBG("VBUS removed via USBD hardware");
+        break;
+    default:
+        break;
+    }
 }
 
 /* ── WAKEUP delayed work ─────────────────────────────────────────────── */
@@ -209,8 +210,8 @@ int power_mgmt_init(void)
     int ret;
 
     /* VBUS 检测 — 通过 USBD 硬件事件 (USBDETECTED/USBREMOVED) */
-    usb_dc_set_status_callback(vbus_status_cb);
-    ret = usb_dc_attach();
+    // usb_dc_set_status_callback(vbus_status_cb);
+    // ret = usb_dc_attach();
     if (ret < 0)
     {
         LOG_ERR("USBD attach failed: %d", ret);

@@ -108,6 +108,16 @@
     status = "okay";
 };
 
+/ {
+    hid_dev_0: hid_dev_0 {
+        compatible = "zephyr,hid-device";
+        label = "HID_KEYBOARD";
+        protocol-code = "keyboard";
+        in-report-size = <64>;
+        in-polling-period-us = <1000>;
+    };
+};
+
 /* 释放 NFC 引脚 P0.09 为 GPIO（BAT_ADC_EN 仍需使用） */
 &uicr {
     nfct-pins-as-gpios;

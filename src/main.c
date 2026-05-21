@@ -10,6 +10,7 @@ LOG_MODULE_REGISTER(MODULE);
 #include "keyboard_core.h"
 #include "mode_switch.h"
 #include "power_mgmt.h"
+#include "usb_transport.h"
 
 int main(void)
 {
@@ -40,6 +41,11 @@ int main(void)
     if (keyboard_core_init() != 0)
     {
         LOG_ERR("Keyboard core init failed");
+    }
+
+    if (usb_transport_init() != 0)
+    {
+        LOG_ERR("USB transport init failed");
     }
 
     return 0;
