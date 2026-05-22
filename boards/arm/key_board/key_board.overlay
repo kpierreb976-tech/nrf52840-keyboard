@@ -1,0 +1,124 @@
+/*
+ * Battery voltage measurement using voltage-divider.
+ *
+ * Circuit:
+ *   VBAT ── R6(100k) ──┬── BAT_ADC ── R8(100k) ── Q1(N-MOSFET) ── GND
+ *                       │
+ *                     C29(100nF)
+ *                       │
+ *                      GND
+ *
+ *   Q1 gate: BAT_ADC_EN (P0.09 / NFC1) ── HIGH = divider active, LOW = power saving
+ *   BAT_ADC: P0.31 = AIN7
+ *
+ *   注意: P0.09 默认是 NFC1 天线引脚，需在 prj.conf 开启
+ *   CONFIG_NFCT_PINS_AS_GPIOS=y 才能释放为 GPIO。
+ */
+
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+    vbatt: vbatt {
+        compatible = "voltage-divider";
+        io-channels = <&adc 7>;
+        output-ohms = <100000>;
+        full-ohms = <200000>;
+        /*
+         * BAT_ADC_EN — P0.09, 控制 N-MOS (Q1) 导通/关断分压电路。
+         * HIGH = 分压使能, LOW = 省电。
+         * 分压比 1: 2 (R6=R8=100k), 驱动自动还原真实电池电压。
+         * C29=100nF, Rth=50kΩ, τ=5ms, 需 ≥6τ (30ms) 延时方可 ADC 采样。
+         */
+        power-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+    };
+
+    mode_sense: mode_sense {
+        compatible = "voltage-divider";
+        io-channels = <&adc 5>;
+        output-ohms = <100000>;
+        full-ohms = <100000>;
+    };
+
+    /*
+     * IP5305T WAKEUP control GPIO — P0.22.
+     * Output, initially high. A periodic low pulse (~200μs) every ~2s
+     * keeps the IP5305T from entering sleep mode.
+     */
+    ip5305t_wakeup: ip5305t-wakeup {
+        gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+    };
+};
+
+/*
+ * I2C bus for IP5305T communication.
+ * SDA: P1.00 (pin 32), SCL: P0.24 (pin 24)
+ */
+&i2c0 {
+    status = "okay";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-1 = <&i2c0_sleep>;
+    pinctrl-names = "default", "sleep";
+    clock-frequency = <I2C_BITRATE_STANDARD>;
+
+    ip5305t: ip5305t@75 {
+        reg = <0x75>;
+    };
+};
+
+&adc {
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    channel@5 {
+        reg = <5>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN5>;
+        zephyr,resolution = <12>;
+    };
+
+    channel@7 {
+        reg = <7>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN7>;
+        zephyr,resolution = <12>;
+    };
+};
+
+/*
+ * QDEC 旋转编码器 — EC11 (P0.10=A相, P1.06=B相)
+ * P0.10 原为 VBUS 检测 GPIO，现已迁移至 USBD 硬件事件检测，归还给 QDEC。
+ * led-pre=4: 硬件每累积 4 steps (1 detent) 触发 SENSOR_TRIG_DATA_READY 中断。
+ */
+&qdec {
+    status = "okay";
+    led-pre = <4>;
+    steps = <80>;
+    pinctrl-0 = <&qdec_default>;
+    pinctrl-1 = <&qdec_sleep>;
+    pinctrl-names = "default", "sleep";
+};
+
+/* 使能 USBD 外设用于 VBUS 硬件检测 (USBDETECTED/USBREMOVED) */
+&usbd {
+    status = "okay";
+};
+
+/ {
+    hid_dev_0: hid_dev_0 {
+        compatible = "zephyr,hid-device";
+        label = "HID_KEYBOARD";
+        protocol-code = "keyboard";
+        in-report-size = <64>;
+        in-polling-period-us = <1000>;
+    };
+};
+
+/* 释放 NFC 引脚 P0.09 为 GPIO（BAT_ADC_EN 仍需使用） */
+&uicr {
+    nfct-pins-as-gpios;
+};

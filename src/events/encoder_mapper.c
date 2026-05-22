@@ -2,7 +2,12 @@
 #include <caf/events/button_event.h>
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(encoder_mapper, LOG_LEVEL_DBG);
+#ifndef CONFIG_ENCODER_MAPPER_LOG_LEVEL
+#define ENCODER_MAPPER_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define ENCODER_MAPPER_LOG_LEVEL CONFIG_ENCODER_MAPPER_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(encoder_mapper, ENCODER_MAPPER_LOG_LEVEL);
 
 /* USB HID Consumer Control 键码 */
 #define HID_CONSUMER_VOL_UP   0x00E9
@@ -22,21 +27,28 @@ static bool handle_encoder_event(const struct app_event_header *aeh)
 
 	for (uint8_t i = 0; i < count; i++) {
 		struct button_event *btn_press = new_button_event();
+		struct button_event *btn_release = new_button_event();
+
 		if (btn_press == NULL) {
 			LOG_ERR("button_event 内存分配失败 (press)");
+			if (btn_release != NULL) {
+				app_event_manager_free(&btn_release->header);
+			}
 			return false;
 		}
-		btn_press->key_id = key_id;
-		btn_press->pressed = true;
-		APP_EVENT_SUBMIT(btn_press);
 
-		struct button_event *btn_release = new_button_event();
 		if (btn_release == NULL) {
 			LOG_ERR("button_event 内存分配失败 (release)");
+			app_event_manager_free(&btn_press->header);
 			return false;
 		}
+
+		btn_press->key_id = key_id;
+		btn_press->pressed = true;
 		btn_release->key_id = key_id;
 		btn_release->pressed = false;
+
+		APP_EVENT_SUBMIT(btn_press);
 		APP_EVENT_SUBMIT(btn_release);
 	}
 

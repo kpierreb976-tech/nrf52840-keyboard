@@ -1,0 +1,5 @@
+mainmenu "NRF Keyboard"
+
+source "$(ZEPHYR_BASE)/Kconfig.zephyr"
+
+rsource "Kconfig.app"

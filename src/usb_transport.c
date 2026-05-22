@@ -1,6 +1,8 @@
 #define MODULE usb_transport
+#include "mode_switch.h"
 #include "events/hid_kbd_report_event.h"
 #include "events/hid_consumer_report_event.h"
+#include "events/mode_event.h"
 #include "events/set_protocol_event.h"
 
 #include <app_event_manager.h>
@@ -14,7 +16,12 @@
 #include <zephyr/usb/class/usbd_hid.h>
 #include <zephyr/usb/class/hid.h>
 
-LOG_MODULE_REGISTER(MODULE, LOG_LEVEL_DBG);
+#ifndef CONFIG_USB_TRANSPORT_LOG_LEVEL
+#define USB_TRANSPORT_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define USB_TRANSPORT_LOG_LEVEL CONFIG_USB_TRANSPORT_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(MODULE, USB_TRANSPORT_LOG_LEVEL);
 
 /* ── 常量定义 ─────────────────────────────────────────────────── */
 
@@ -62,8 +69,13 @@ K_SEM_DEFINE(usb_tx_sem, 0, K_SEM_MAX_LIMIT);
 static const struct device *hid_dev;
 static struct usbd_context *usbd_ctx;
 static bool usb_configured;
+static bool usb_mode_active;
+static bool hid_iface_ready;
 static uint8_t current_proto = 1; /* HID_PROTOCOL_REPORT, HID 规范默认 */
 static bool nkro_enabled = true;
+static uint32_t idle_duration_kbd;
+static uint32_t idle_duration_consumer;
+static uint32_t idle_duration_nkro;
 
 /* ── USB 设备上下文与描述符定义 ───────────────────────────────── */
 
@@ -189,13 +201,92 @@ static const uint8_t hid_report_desc[] = {
 
 static void hid_iface_ready_cb(const struct device *dev, const bool ready)
 {
-	LOG_INF("HID 接口 %s", ready ? "就绪" : "断开");
-	usb_configured = ready;
+	if (ready)
+	{
+		LOG_INF("HID_READY ready=1");
+	}
+	else
+	{
+		LOG_INF("HID disconnected");
+	}
+	hid_iface_ready = ready;
+}
+
+static uint32_t *idle_duration_slot(uint8_t id)
+{
+	switch (id)
+	{
+	case KBD_REPORT_ID:
+		return &idle_duration_kbd;
+	case CONSUMER_REPORT_ID:
+		return &idle_duration_consumer;
+	case KBD_NKRO_REPORT_ID:
+		return &idle_duration_nkro;
+	default:
+		return NULL;
+	}
+}
+
+static void hid_set_idle_cb(const struct device *dev,
+							const uint8_t id,
+							const uint32_t duration)
+{
+	uint32_t *slot;
+
+	ARG_UNUSED(dev);
+
+	if (id == 0)
+	{
+		idle_duration_kbd = duration;
+		idle_duration_consumer = duration;
+		idle_duration_nkro = duration;
+		LOG_DBG("HID SetIdle id=0 duration=%ums", duration);
+		return;
+	}
+
+	slot = idle_duration_slot(id);
+	if (slot == NULL)
+	{
+		LOG_WRN("HID SetIdle 未知 Report ID=%u duration=%ums", id, duration);
+		return;
+	}
+
+	*slot = duration;
+	LOG_DBG("HID SetIdle id=%u duration=%ums", id, duration);
+}
+
+static uint32_t hid_get_idle_cb(const struct device *dev, const uint8_t id)
+{
+	uint32_t *slot;
+
+	ARG_UNUSED(dev);
+
+	if (id == 0)
+	{
+		LOG_DBG("HID GetIdle id=0 duration=%ums", idle_duration_kbd);
+		return idle_duration_kbd;
+	}
+
+	slot = idle_duration_slot(id);
+	if (slot == NULL)
+	{
+		LOG_WRN("HID GetIdle 未知 Report ID=%u", id);
+		return 0;
+	}
+
+	LOG_DBG("HID GetIdle id=%u duration=%ums", id, *slot);
+	return *slot;
 }
 
 static void hid_set_protocol_cb(const struct device *dev, const uint8_t proto)
 {
 	struct set_protocol_event *event = new_set_protocol_event();
+
+	if (event == NULL)
+	{
+		LOG_ERR("set_protocol_event 内存分配失败");
+		return;
+	}
 
 	if (proto == 0)
 	{
@@ -208,12 +299,6 @@ static void hid_set_protocol_cb(const struct device *dev, const uint8_t proto)
 		current_proto = 1; /* HID_PROTOCOL_REPORT */
 		nkro_enabled = true;
 		LOG_INF("主机请求协议切换: Report → NKRO 通道已启用 (33B)");
-	}
-
-	if (event == NULL)
-	{
-		LOG_ERR("set_protocol_event 内存分配失败");
-		return;
 	}
 
 	event->protocol = proto;
@@ -247,6 +332,8 @@ static int hid_set_report_cb(const struct device *dev,
 
 static const struct hid_device_ops hid_ops = {
 	.iface_ready = hid_iface_ready_cb,
+	.set_idle = hid_set_idle_cb,
+	.get_idle = hid_get_idle_cb,
 	.set_protocol = hid_set_protocol_cb,
 	.get_report = hid_get_report_cb,
 	.set_report = hid_set_report_cb,
@@ -263,35 +350,37 @@ static void usb_status_msg_cb(struct usbd_context *const ctx,
 		if (msg->status > 0)
 		{
 			usb_configured = true;
-			LOG_INF("USB 已配置 (配置值=%d)，传输就绪", msg->status);
+			LOG_INF("USB_CONFIGURED value=%d", msg->status);
 		}
 		else
 		{
 			usb_configured = false;
-			LOG_INF("USB 取消配置");
+			LOG_INF("USB_CONFIGURED value=0");
 		}
 		break;
 	case USBD_MSG_RESET:
 		usb_configured = false;
-		LOG_INF("USB 总线复位，传输暂停");
+		hid_iface_ready = false;
+		LOG_DBG("USB 总线复位，传输暂停");
 		break;
 	case USBD_MSG_SUSPEND:
 		usb_configured = false;
-		LOG_INF("USB 挂起，传输暂停");
+		LOG_DBG("USB 挂起，传输暂停");
 		break;
 	case USBD_MSG_RESUME:
-		LOG_INF("USB 恢复");
+		LOG_DBG("USB 恢复");
 		break;
 	case USBD_MSG_VBUS_READY:
-		LOG_INF("VBUS 就绪，使能 USB 设备");
+		LOG_INF("VBUS ready");
 		if (usbd_enable(ctx))
 		{
 			LOG_ERR("VBUS 就绪后使能失败");
 		}
 		break;
 	case USBD_MSG_VBUS_REMOVED:
-		LOG_INF("VBUS 移除，禁用 USB 设备");
+		LOG_INF("VBUS removed");
 		usb_configured = false;
+		hid_iface_ready = false;
 		if (usbd_disable(ctx))
 		{
 			LOG_ERR("VBUS 移除后禁用失败");
@@ -307,10 +396,27 @@ static void usb_status_msg_cb(struct usbd_context *const ctx,
 static int ring_push(uint8_t type, uint8_t format,
 					 const uint8_t *data, uint8_t len)
 {
+	if (data == NULL)
+	{
+		LOG_ERR("USB 报告数据为空 type=%u", type);
+		return -EINVAL;
+	}
+
+	if (type != USB_TX_TYPE_KBD && type != USB_TX_TYPE_CONSUMER)
+	{
+		LOG_ERR("USB 报告类型非法 type=%u", type);
+		return -EINVAL;
+	}
+
 	if (len > 32)
 	{
 		LOG_ERR("报文过长 %u > 32", len);
 		return -EINVAL;
+	}
+
+	if (ring_buf_space_get(&usb_tx_ring) < sizeof(struct usb_tx_item))
+	{
+		return -ENOSPC;
 	}
 
 	struct usb_tx_item item;
@@ -324,6 +430,9 @@ static int ring_push(uint8_t type, uint8_t format,
 								  sizeof(item));
 	if (wrote < sizeof(item))
 	{
+		LOG_ERR("USB 队列写入异常 wrote=%u need=%u",
+				wrote, (uint32_t)sizeof(item));
+		ring_buf_reset(&usb_tx_ring);
 		return -ENOSPC;
 	}
 
@@ -331,13 +440,77 @@ static int ring_push(uint8_t type, uint8_t format,
 	return 0;
 }
 
+static void set_usb_mode_active(bool active)
+{
+	if (usb_mode_active == active)
+	{
+		return;
+	}
+
+	usb_mode_active = active;
+	if (!usb_mode_active)
+	{
+		ring_buf_reset(&usb_tx_ring);
+	}
+
+	LOG_INF("USB 档位激活=%d", usb_mode_active ? 1 : 0);
+}
+
+static void log_usb_tx_drop(const char *reason, bool consumer_release)
+{
+	ARG_UNUSED(consumer_release);
+	LOG_DBG("USB_TX_DROP reason=%s", reason);
+}
+
+static bool usb_tx_gate(bool consumer_release)
+{
+	if (!usb_mode_active)
+	{
+		log_usb_tx_drop("not_usb_mode", consumer_release);
+		return false;
+	}
+
+	if (!usb_configured)
+	{
+		log_usb_tx_drop("not_configured", consumer_release);
+		return false;
+	}
+
+	if (!hid_iface_ready)
+	{
+		log_usb_tx_drop("no_iface", consumer_release);
+		return false;
+	}
+
+	return true;
+}
+
+static bool usb_tx_item_is_consumer_release(const struct usb_tx_item *item)
+{
+	if (item->type != USB_TX_TYPE_CONSUMER || item->len != CONSUMER_REPORT_SIZE)
+	{
+		return false;
+	}
+
+	for (uint8_t i = 1; i < CONSUMER_REPORT_SIZE; i++)
+	{
+		if (item->data[i] != 0)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 /* ── 事件监听回调（CAF 上下文，非阻塞）────────────────────────── */
 
 static bool handle_kbd_report(const struct app_event_header *aeh)
 {
-	LOG_DBG("收到键盘事件，usb_configured=%d", usb_configured);
+	LOG_DBG("收到键盘事件，usb_configured=%d usb_mode=%d hid_iface_ready=%d",
+			usb_configured, usb_mode_active, hid_iface_ready);
 
-	if (!usb_configured)
+	if (!usb_tx_gate(false))
 	{
 		return false;
 	}
@@ -363,15 +536,17 @@ static bool handle_kbd_report(const struct app_event_header *aeh)
 
 static bool handle_consumer_report(const struct app_event_header *aeh)
 {
-	LOG_DBG("收到消费者事件，usb_configured=%d", usb_configured);
+	const struct hid_consumer_report_event *event =
+		cast_hid_consumer_report_event(aeh);
+	bool consumer_release = (event->count == 0);
 
-	if (!usb_configured)
+	LOG_DBG("收到消费者事件，usb_configured=%d usb_mode=%d hid_iface_ready=%d",
+			usb_configured, usb_mode_active, hid_iface_ready);
+
+	if (!usb_tx_gate(consumer_release))
 	{
 		return false;
 	}
-
-	const struct hid_consumer_report_event *event =
-		cast_hid_consumer_report_event(aeh);
 
 	/*
 	 * 构建 7 字节线缆报文:
@@ -399,11 +574,22 @@ static bool handle_consumer_report(const struct app_event_header *aeh)
 	return false;
 }
 
+static bool handle_mode_event(const struct app_event_header *aeh)
+{
+	const struct mode_event *event = cast_mode_event(aeh);
+
+	set_usb_mode_active(event->mode == MODE_SWITCH_POS_USB);
+	return false;
+}
+
 APP_EVENT_LISTENER(usb_tx_kbd, handle_kbd_report);
 APP_EVENT_SUBSCRIBE(usb_tx_kbd, hid_kbd_report_event);
 
 APP_EVENT_LISTENER(usb_tx_consumer, handle_consumer_report);
 APP_EVENT_SUBSCRIBE(usb_tx_consumer, hid_consumer_report_event);
+
+APP_EVENT_LISTENER(usb_mode_listener, handle_mode_event);
+APP_EVENT_SUBSCRIBE(usb_mode_listener, mode_event);
 
 /* ── 传输线程 ─────────────────────────────────────────────────── */
 
@@ -420,7 +606,7 @@ static void usb_tx_thread_fn(void *arg1, void *arg2, void *arg3)
 							sizeof(item)) == sizeof(item))
 		{
 
-			if (!usb_configured)
+			if (!usb_tx_gate(usb_tx_item_is_consumer_release(&item)))
 			{
 				continue;
 			}
@@ -633,6 +819,9 @@ static int usb_hid_init(void)
 int usb_transport_init(void)
 {
 	int ret;
+
+	usb_mode_active = false;
+	LOG_INF("USB 档位激活=%d", usb_mode_active ? 1 : 0);
 
 	ret = usb_hid_init();
 	if (ret < 0)

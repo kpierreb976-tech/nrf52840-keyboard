@@ -16,7 +16,12 @@
 
 #include "events/battery_event.h"
 
-LOG_MODULE_REGISTER(power_mgmt, LOG_LEVEL_DBG);
+#ifndef CONFIG_POWER_MGMT_LOG_LEVEL
+#define POWER_MGMT_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define POWER_MGMT_LOG_LEVEL CONFIG_POWER_MGMT_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(power_mgmt, POWER_MGMT_LOG_LEVEL);
 
 /* ── Device tree nodes ───────────────────────────────────────────────── */
 
@@ -155,7 +160,12 @@ static void wakeup_work_handler(struct k_work *work)
 
     /* ── 读取 0x71 寄存器判定充电状态 ──────────────────────── */
     uint8_t reg_71 = 0;
-    i2c_reg_read_byte_dt(&ip5305t, IP5305T_REG_CHARGE_STATUS, &reg_71);
+    ret = i2c_reg_read_byte_dt(&ip5305t, IP5305T_REG_CHARGE_STATUS, &reg_71);
+    if (ret < 0)
+    {
+        LOG_ERR("充电状态读取失败: %d", ret);
+        goto skip_battery;
+    }
     bool charging = (reg_71 != 0x00);
 
     /* ── 状态判定：充电中 + 电压 >= 4150mV → 满电 ─────────── */
@@ -172,15 +182,15 @@ static void wakeup_work_handler(struct k_work *work)
     /* ── UI 输出：仅在 wakeup handler 中呈现电池状态 ──────── */
     if (current_state == 2)
     {
-        LOG_INF("🔋 电量: %u%% (%dmV) | 🔌 状态: 已充满 (FULL)", level_pct, voltage_mv);
+        LOG_INF("电池 %u%% %dmV 已满", level_pct, voltage_mv);
     }
     else if (current_state == 1)
     {
-        LOG_INF("🔋 电量: %u%% (%dmV) | ⚡ 状态: 充电中 (CHARGING)", level_pct, voltage_mv);
+        LOG_INF("电池 %u%% %dmV 充电", level_pct, voltage_mv);
     }
     else
     {
-        LOG_INF("电量: %u%% (%dmV) | 🔋 状态: 电池供电 (DISCHARGING)", level_pct, voltage_mv);
+        LOG_INF("电池 %u%% %dmV 放电", level_pct, voltage_mv);
     }
 
     struct battery_event *event = new_battery_event();
@@ -209,14 +219,8 @@ int power_mgmt_init(void)
 {
     int ret;
 
-    /* VBUS 检测 — 通过 USBD 硬件事件 (USBDETECTED/USBREMOVED) */
-    // usb_dc_set_status_callback(vbus_status_cb);
-    // ret = usb_dc_attach();
-    if (ret < 0)
-    {
-        LOG_ERR("USBD attach failed: %d", ret);
-        return ret;
-    }
+    /* VBUS 检测由 USB Next Stack 负责；此模块不再挂旧 usb_dc 回调。 */
+    ret = 0;
     LOG_INF("VBUS detection switched to USBD hardware event");
 
     /* BAT_ADC_EN GPIO — 控制分压电路 N-MOS 导通/关断 */

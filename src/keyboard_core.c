@@ -8,7 +8,12 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(keyboard_core, LOG_LEVEL_DBG);
+#ifndef CONFIG_KEYBOARD_CORE_LOG_LEVEL
+#define KEYBOARD_CORE_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define KEYBOARD_CORE_LOG_LEVEL CONFIG_KEYBOARD_CORE_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(keyboard_core, KEYBOARD_CORE_LOG_LEVEL);
 
 /* ── 内部状态 ─────────────────────────────────────────────── */
 
@@ -62,13 +67,13 @@ static void build_nkro_report(const uint8_t bitmap[32], uint8_t raw_report[32])
 /* ── 事件提交 ──────────────────────────────────────────────── */
 
 /** 在堆上分配事件并投递键盘报告。仅在差分检测通过后调用。 */
-static void submit_kbd_report(void)
+static bool submit_kbd_report(void)
 {
 	struct hid_kbd_report_event *event = new_hid_kbd_report_event();
 
 	if (!event) {
 		LOG_ERR("hid_kbd_report_event 内存分配失败");
-		return;
+		return false;
 	}
 
 	event->format = report_format;
@@ -82,37 +87,39 @@ static void submit_kbd_report(void)
 		build_nkro_report(kbd_bitmap, event->raw_report);
 	}
 
-	APP_EVENT_SUBMIT(event);
-
 	LOG_DBG("键盘报告 fmt=%d: [%02X %02X %02X %02X %02X %02X %02X %02X]",
 		report_format,
 		event->raw_report[0], event->raw_report[1],
 		event->raw_report[2], event->raw_report[3],
 		event->raw_report[4], event->raw_report[5],
 		event->raw_report[6], event->raw_report[7]);
+
+	APP_EVENT_SUBMIT(event);
+	return true;
 }
 
 /** 投递消费者控制报告。 */
-static void submit_consumer_report(void)
+static bool submit_consumer_report(void)
 {
 	struct hid_consumer_report_event *event = new_hid_consumer_report_event();
 
 	if (!event) {
 		LOG_ERR("hid_consumer_report_event 内存分配失败");
-		return;
+		return false;
 	}
 
 	event->report_id = 2;
 	event->count = consumer_count;
 	memcpy(event->usages, consumer_usages, sizeof(consumer_usages));
 
-	APP_EVENT_SUBMIT(event);
-
 	LOG_DBG("消费者报告: count=%u usages=[0x%04X 0x%04X 0x%04X]",
 		consumer_count,
 		consumer_count > 0 ? consumer_usages[0] : 0x0000,
 		consumer_count > 1 ? consumer_usages[1] : 0x0000,
 		consumer_count > 2 ? consumer_usages[2] : 0x0000);
+
+	APP_EVENT_SUBMIT(event);
+	return true;
 }
 
 /* ── 差分检测与报告投递 ────────────────────────────────────── */
@@ -134,14 +141,18 @@ static void check_and_submit(void)
 			memset(temp_report, 0, sizeof(temp_report));
 			build_boot_report(kbd_bitmap, temp_report);
 			if (memcmp(temp_report, prev_kbd_report, 8) != 0) {
+				if (!submit_kbd_report()) {
+					return;
+				}
 				memcpy(prev_kbd_report, temp_report, 32);
-				submit_kbd_report();
 			}
 		} else {
 			build_nkro_report(kbd_bitmap, temp_report);
 			if (memcmp(temp_report, prev_kbd_report, 32) != 0) {
+				if (!submit_kbd_report()) {
+					return;
+				}
 				memcpy(prev_kbd_report, temp_report, 32);
-				submit_kbd_report();
 			}
 		}
 		kbd_dirty = false;
@@ -149,7 +160,9 @@ static void check_and_submit(void)
 
 	/* ── 消费者报告 ── */
 	if (consumer_dirty) {
-		submit_consumer_report();
+		if (!submit_consumer_report()) {
+			return;
+		}
 		memcpy(prev_consumer_usages, consumer_usages, sizeof(consumer_usages));
 		prev_consumer_count = consumer_count;
 		consumer_dirty = false;

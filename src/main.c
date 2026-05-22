@@ -4,9 +4,15 @@
 #include <caf/events/module_state_event.h>
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(MODULE);
+#ifndef CONFIG_MAIN_LOG_LEVEL
+#define MAIN_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define MAIN_LOG_LEVEL CONFIG_MAIN_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(MODULE, MAIN_LOG_LEVEL);
 
 #include "encoder.h"
+#include "ble_transport.h"
 #include "keyboard_core.h"
 #include "mode_switch.h"
 #include "power_mgmt.h"
@@ -46,6 +52,11 @@ int main(void)
     if (usb_transport_init() != 0)
     {
         LOG_ERR("USB transport init failed");
+    }
+
+    if (ble_transport_init() != 0)
+    {
+        LOG_ERR("BLE transport init failed");
     }
 
     return 0;

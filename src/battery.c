@@ -7,7 +7,12 @@
 #include <zephyr/pm/device_runtime.h>
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_REGISTER(battery, LOG_LEVEL_INF);
+#ifndef CONFIG_BATTERY_LOG_LEVEL
+#define BATTERY_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define BATTERY_LOG_LEVEL CONFIG_BATTERY_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(battery, BATTERY_LOG_LEVEL);
 
 #define VBATT_NODE DT_NODELABEL(vbatt)
 

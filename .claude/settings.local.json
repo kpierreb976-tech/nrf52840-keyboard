@@ -34,7 +34,12 @@
       "PowerShell(python -c \"import west; print\\(west.__file__\\)\" 2>&1)",
       "Bash(python3 -m west)",
       "Bash(python -m west)",
-      "Bash(/c/ncs/toolchains/fd21892d0f/opt/bin/python.exe -m west --help)"
+      "Bash(/c/ncs/toolchains/fd21892d0f/opt/bin/python.exe -m west --help)",
+      "Bash(Get-Content *)",
+      "Bash(sed -i '1352,1366d' src/ble_transport.c)",
+      "Bash(sed -i '1351 r /tmp/handle_kbd_new.txt' src/ble_transport.c)",
+      "Bash(python3 -c ' *)",
+      "PowerShell($lines = Get-Content \"C:\\\\NRF\\\\KEYBOARD\\\\src\\\\ble_transport.c\" -Encoding UTF8; for \\($i = 1559; $i -lt 1594; $i++\\) { Write-Output \"[$\\($i+1\\)] $\\($lines[$i]\\)\" })"
     ]
   }
 }

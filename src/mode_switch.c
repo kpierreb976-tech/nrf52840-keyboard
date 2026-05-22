@@ -11,7 +11,12 @@
 
 #include "events/mode_event.h"
 
-LOG_MODULE_REGISTER(mode_switch, LOG_LEVEL_DBG);
+#ifndef CONFIG_MODE_SWITCH_LOG_LEVEL
+#define MODE_SWITCH_LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
+#else
+#define MODE_SWITCH_LOG_LEVEL CONFIG_MODE_SWITCH_LOG_LEVEL
+#endif
+LOG_MODULE_REGISTER(mode_switch, MODE_SWITCH_LOG_LEVEL);
 
 #define MODE_SENSE_NODE DT_NODELABEL(mode_sense)
 
@@ -58,8 +63,6 @@ static void mode_poll_handler(struct k_work *work)
 
 	/* 只有档位发生实际变化时才提交事件 */
 	if (pos != last_pos) {
-		last_pos = pos;
-
 		struct mode_event *event = new_mode_event();
 		if (event == NULL) {
 			LOG_ERR("Event alloc failed!");
@@ -67,6 +70,7 @@ static void mode_poll_handler(struct k_work *work)
 		}
 		event->mode = (uint8_t)pos;
 		APP_EVENT_SUBMIT(event);
+		last_pos = pos;
 	}
 
 reschedule:
