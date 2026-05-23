@@ -1,2 +1,0 @@
-# Load Zephyr board defconfig descriptions.
-osource "C:/NRF/KEYBOARD/boards/atjialidun/key_board/Kconfig.defconfig"

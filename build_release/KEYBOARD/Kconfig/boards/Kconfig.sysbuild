@@ -1,2 +1,0 @@
-# Load Sysbuild board Kconfig descriptions.
-osource "C:/NRF/KEYBOARD/boards/atjialidun/key_board/Kconfig.sysbuild"
