@@ -5,9 +5,9 @@
 ```
   nRF52840                          IP5305T 电源管理芯片
   ┌──────────┐                      ┌──────────────┐
-  │ P0.10    │── VBUS 检测 ◄────────│ VBUS 输出     │
-  │          │    (读这个脚就知道    │               │
-  │          │     USB 插没插)      │               │
+  │ USBD     │── VBUS 硬件事件 ◄────│ USB VBUS      │
+  │          │    (USBDETECTED /     │               │
+  │          │     USBREMOVED)       │               │
   │          │                      │               │
   │ P0.22    │── WAKEUP 唤醒 ──────►│ KEY 输入脚    │
   │          │     (低电平有效:       │  (如果超过     │
@@ -15,12 +15,12 @@
   │          │                      │   没活动就     │
   │          │                      │   自动睡着)    │
   │          │                      │               │
-  │ P0.05    │── I2C SDA ──────────│ SDA 数据线    │
-  │ P0.06    │── I2C SCL ──────────│ SCL 时钟线    │
+  │ P1.00    │── I2C SDA ──────────│ SDA 数据线    │
+  │ P0.24    │── I2C SCL ──────────│ SCL 时钟线    │
   │          │                      │               │
-  │ P0.04    │── vbatt ADC ◄───────│ BAT 电池端    │
+  │ P0.31    │── vbatt ADC/AIN7 ◄──│ BAT 电池端    │
   │          │     (经过外部分压)    │  (经电阻分压  │
-  │ P1.10    │── vbatt 电源开关      │   后送出)     │
+  │ P0.09    │── BAT_ADC_EN          │   后送出)     │
   └──────────┘                      └──────────────┘
 ```
 
@@ -30,9 +30,8 @@ IP5305T 是一款集成 4 段电量计的锂电池充电管理芯片，通过 I2
 
 | 寄存器名 | 地址 | 位段 | 含义 |
 |---------|------|------|------|
-| STATUS | 0x78 | [7:4] | 电量档位（温度计码） |
-| | | 3 | 充满标志 (FULL) |
-| | | 2 | 充电中标志 (CHARGING) |
+| STATUS | 0x78 | [7:4] | 电量档位（温度计码，保留接口使用） |
+| CHARGE_STATUS | 0x71 | 非 0 | 当前代码用于判断是否处于充电状态 |
 
 **温度计码 → 百分比对照表：**
 
@@ -74,8 +73,8 @@ IP5305T 芯片有个省电机制：如果连续约 10 秒没有负载活动，�
 
 1. 把 P0.22 配置成输出模式，输出低电平（持续 200ms）
 2. 把 P0.22 释放回高阻输入模式（让 PMIC 内部的上拉电阻把电平拉回去，同时防止 MCU 漏电）
-3. 通过 I2C 读 IP5305T 的 STATUS 寄存器 → 拿到电量百分比 + 充电状态
-4. 如果 I2C 不通（PMIC 已经睡死过去）→ 走备选方案：启动 ADC 读电池电压，换算百分比
+3. 启动 ADC 读取真实电池电压，按 3200mV~4200mV 线性换算电量百分比
+4. 通过 I2C 读取 IP5305T 的 `0x71` 寄存器判断充电状态；若读取失败则跳过本轮电池事件
 5. 分配一个 `battery_event` 事件对象，填好 `level`（电量）和 `state`（充放电状态）
 6. `APP_EVENT_SUBMIT(event)` —— 扔进事件总线
 7. `k_work_schedule(&wakeup_work, K_SECONDS(12))` —— 预定 12 秒后的下一次 "踢一脚"
@@ -90,29 +89,28 @@ IP5305T 芯片有个省电机制：如果连续约 10 秒没有负载活动，�
 | 1 | 正在充电 | USB 插着，电量还没满 |
 | 2 | 已充满 | USB 插着，电量已到 100% |
 
-## 5. 电压备选回路——"I2C 不行就靠猜"
+## 5. 电压采样回路——"ADC 给出电量，I2C 给出充电状态"
 
 当 IP5305T 的 I2C 不通时（比如它已经深度休眠），我们没办法直接问它电量多少。这时候只能用传统方法：**拿 ADC 量一下电池电压，然后凭经验估算还剩多少电**。
 
 ```
-power_mgmt_get_battery_level()
+当前周期事件路径
   │
-  ├── i2c_reg_read_byte_dt(0x78)  →  成功?
-  │    └── 是: 用温度计码直接算出百分比（又快又准）
-  │
-  └── 否:
-       ├── pm_device_runtime_get(vbatt_dev)        ← 给 ADC 供电
-       ├── sensor_sample_fetch(vbatt_dev)           ← 触发一次采样
-       ├── sensor_channel_get(..., 电压通道)         ← 读出电压值
-       ├── pm_device_runtime_put(vbatt_dev)         ← 关掉 ADC 省电
-       ├── 电压值 / 2  (因为外部分压器把电压砍了一半)
-       └── voltage_to_battery_pct(mV)  线性换算:
+  ├── gpio_pin_set(BAT_ADC_EN, 1)                  ← 打开电池分压
+  ├── 等待 30ms                                    ← 等待 RC 稳定
+  ├── pm_device_runtime_get(vbatt_dev)
+  ├── sensor_sample_fetch(vbatt_dev)
+  ├── sensor_channel_get(..., 电压通道)
+  ├── pm_device_runtime_put(vbatt_dev)
+  ├── gpio_pin_set(BAT_ADC_EN, 0)                  ← 关闭分压省电
+  ├── voltage_to_battery_pct(mV)  线性换算:
             ├── 电压 ≥ 4200 mV → 100%
             ├── 电压 ≤ 3200 mV → 0%
             └── 在中间 → 按比例线性插值
+  └── i2c_reg_read_byte_dt(0x71)                   ← 判断充电/放电/满电
 ```
 
-> 这个估算精度有限（锂电池放电曲线不是线性的），但它足够回答 "大概还有几格电" 这个问题。
+`power_mgmt_get_battery_level()` 仍保留 IP5305T `0x78` 温度计码读取和电压回退逻辑，但当前周期性 `battery_event` 以 ADC 电压作为唯一电量数据源。
 
 ## 6. 设备树配置
 
@@ -120,25 +118,27 @@ power_mgmt_get_battery_level()
 / {
     vbatt: vbatt {
         compatible = "voltage-divider";
-        io-channels = <&adc 1>;       /* 用 ADC 通道 1 */
-        output-ohms = <470000>;       /* 下臂电阻 470kΩ */
-        full-ohms = <1000000>;        /* 总电阻 1MΩ，即上臂 530kΩ */
-        power-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;  /* 不用时关电 */
+        io-channels = <&adc 7>;       /* ADC 通道 7，P0.31 / AIN7 */
+        output-ohms = <100000>;       /* 下臂电阻 100kΩ */
+        full-ohms = <200000>;         /* 总电阻 200kΩ，上臂 100kΩ */
+        power-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;  /* BAT_ADC_EN，P0.09 / NFC1 */
     };
 };
 
 &i2c0 {
+    clock-frequency = <I2C_BITRATE_STANDARD>;
     ip5305t: ip5305t@75 {
-        compatible = "ip5305t";
         reg = <0x75>;                /* I2C 从机地址 */
     };
 };
 ```
+
+`i2c0` 当前引脚为 SDA=P1.00、SCL=P0.24。P0.09 默认是 NFC1，需要通过 `&uicr { nfct-pins-as-gpios; };` 释放为 GPIO。
 
 ## 7. 生产环境日志策略
 
 | 日志级别 | 内容举例 | CONFIG_LOG_DEFAULT_LEVEL=1 时 |
 |---------|---------|------------------------------|
 | LOG_ERR | GPIO 配置失败、I2C 读失败、ADC 采样失败、事件分配失败、定时器预定失败 | ✅ 保留编译 |
-| LOG_DBG | "发送保活脉冲"、"电源管理初始化完成"、"电压估算电量: X%"、"I2C 不通，走备选" | ✗ 编译剔除 |
+| LOG_DBG | "发送保活脉冲"、"电源管理初始化完成"、"电压估算电量: X%"、"VBUS 硬件事件变化" | ✗ 编译剔除 |
 | APP_EVENT_MANAGER_LOG | "e:battery_event lvl=75 st=0" | 由独立配置项控制 |

@@ -8,21 +8,20 @@
 
 **结论通过**：`key_board.overlay` 已使能 `&usbd { status = "okay"; }`，nRF52840 USBD 硬件可用。
 
-## 3. Kconfig 新增需求
+## 3. Kconfig 当前配置
 
-`prj.conf` 需新增以下配置项：
+当前 `prj.conf` 已启用并需要保持以下配置项：
 
 ```
 # --- USB Next Stack (新一代 USB 堆栈) ---
 CONFIG_USB_DEVICE_STACK_NEXT=y
-CONFIG_USB_DEVICE_HID=y
+CONFIG_USBD_HID_SUPPORT=y
 
 # --- Ring Buffer (环形缓冲区，生产者-消费者桥梁) ---
-CONFIG_RING_BUF=y
-CONFIG_RING_BUFFER_SIZE=2048
+CONFIG_RING_BUFFER=y
 ```
 
-> 注：`CONFIG_USB_DEVICE_STACK=y` 已在 prj.conf 中开启，需确认与 Next Stack 的关系。若 Next Stack 是独立选项，需同时开启 `CONFIG_USB_DEVICE_STACK_NEXT`。若冲突则需关闭旧选项。
+当前工程使用 USB Device Stack Next，未启用旧版 `CONFIG_USB_DEVICE_STACK`。USB HID IN 缓冲和 UDC 缓冲池通过 `CONFIG_USBD_HID_IN_BUF_COUNT=8`、`CONFIG_UDC_BUF_COUNT=32`、`CONFIG_UDC_BUF_POOL_SIZE=8192` 放大，以降低高峰按键和 EP0 控制传输时的 net_buf 分配失败风险。
 
 ## 4. 架构设计
 

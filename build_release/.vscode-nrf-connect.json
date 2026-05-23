@@ -1,0 +1,18 @@
+{
+  "toolchainPath": "c:\\ncs\\toolchains\\fd21892d0f",
+  "sdkPath": "c:\\ncs\\v3.2.3",
+  "board": "key_board/nrf52840",
+  "boardDir": "c:\\NRF\\KEYBOARD\\boards\\atjialidun\\key_board",
+  "boardDirs": [
+    "c:\\NRF\\KEYBOARD\\boards\\atjialidun\\key_board"
+  ],
+  "optimizations": "none",
+  "cmakeArgs": [],
+  "confFiles": [],
+  "buildDirectory": "build_release",
+  "kconfigFragments": [],
+  "snippets": [],
+  "dtcOverlays": [],
+  "extraDtcOverlays": [],
+  "boardRoot": "c:\\NRF\\KEYBOARD"
+}

@@ -1,6 +1,18 @@
-# editors
-*.swp
-*~
+# Zephyr / West 编译输出
+build/
+build_debug/
+.cache/
 
-# build
-/build*/
+# 编译中间文件和产物
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+
+# 你的编辑器配置 (可选)
+.vscode/
+.idea/
+*.swp
+*.swo

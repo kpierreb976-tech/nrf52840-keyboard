@@ -9,7 +9,12 @@
 │   main.c                                                             │
 │   ├── app_event_manager_init()     ← 初始化 CAF 事件总线              │
 │   ├── power_mgmt_init()            ← 初始化电源管理模块                │
-│   └── mode_switch_init()           ← 初始化档位检测模块                │
+│   ├── encoder_init()               ← 初始化 EC11 QDEC                 │
+│   ├── mode_switch_init()           ← 初始化档位检测模块                │
+│   ├── keyboard_core_init()         ← 初始化 HID 报告核心               │
+│   ├── lcd_display_init()           ← 初始化 LCD 诊断/色块测试          │
+│   ├── usb_transport_init()         ← 初始化 USB HID 传输层             │
+│   └── ble_transport_init()         ← 初始化 BLE HID 传输层             │
 └──────────────────────────────┬───────────────────────────────────────┘
                                │
 ┌──────────────────────────────▼───────────────────────────────────────┐
@@ -33,13 +38,14 @@
 │                    设备树层 (Device Tree / .overlay)                   │
 │                                                                      │
 │   mode_sense: voltage-divider    vbatt: voltage-divider               │
+│   ├── io-channels: ADC5/AIN5    ├── io-channels: ADC7/AIN7(P0.31)   │
 │   ├── output-ohms: 100k         ├── output-ohms: 100k                │
-│   ├── full-ohms: 200k           ├── full-ohms: 200k                 │
-│   └── power-gpios: P0.13        └── power-gpios: P0.09 (NFC1)        │
+│   └── full-ohms: 100k           └── power-gpios: P0.09 (NFC1)        │
 │                                                                      │
 │   ip5305t: i2c-device           gpio0: gpio-controller               │
-│   ├── reg: 0x75                 ├── P0.10: VBUS 插入检测             │
-│   └── bus: i2c0                 └── P0.22: WAKEUP 唤醒脚 (低有效)    │
+│   ├── reg: 0x75                 ├── P0.22: WAKEUP 唤醒脚 (低有效)    │
+│   └── bus: i2c0(SDA=P1.00,      └── USBD: VBUS 硬件事件检测          │
+│       SCL=P0.24)                                                     │
 └──────────────────────────────┬───────────────────────────────────────┘
                                │
 ┌──────────────────────────────▼───────────────────────────────────────┐
@@ -47,14 +53,14 @@
 │                                                                      │
 │   nRF52840 主控芯片                                                   │
 │   ├── SAADC (采集 mode_sense 和 vbatt 两路电压)                       │
-│   ├── TWIM0 / I2C0 (与 IP5305T 通信)                                 │
-│   ├── GPIOE (检测 VBUS 插入、发送 WAKEUP 脉冲)                       │
+│   ├── TWIM0 / I2C0 (SDA=P1.00, SCL=P0.24，与 IP5305T 通信)           │
+│   ├── USBD (硬件 VBUS 插拔事件)                                      │
+│   ├── GPIO (发送 WAKEUP 脉冲、控制 BAT_ADC_EN、LCD 背光)             │
 │   └── RTT (SEGGER 调试控制台输出)                                     │
 │                                                                      │
 │   IP5305T 电源管理芯片 (I2C 地址 0x75)                                 │
-│   ├── 4 段式电量计 (温度计码)                                         │
-│   ├── 充电状态 (寄存器 0x78 的 bit 2)                                │
-│   └── 充满状态 (寄存器 0x78 的 bit 3)                                │
+│   ├── 4 段式电量计 (0x78 温度计码，保留接口使用)                     │
+│   └── 充电状态 (当前代码读取寄存器 0x71)                             │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -63,8 +69,13 @@
 | 模块 | 源文件 | 干了什么事 |
 |------|--------|-----------|
 | `main` | `src/main.c` | 启动 CAF 事件总线、依次拉起各子模块、向上报告 module_state |
-| `mode_switch` | `src/mode_switch.c` | 每 5 秒读一次 ADC 电压，判断当前在哪个档位，只有档位真的变了才发事件 |
-| `power_mgmt` | `src/power_mgmt.c` | 每 12 秒踢一脚 PMIC 防止它睡着；同时读电池电量（优选 I2C，不行就靠电压猜） |
+| `mode_switch` | `src/mode_switch.c` | 每 5 秒读一次 AIN5 电压，判断当前在哪个档位，只有档位真的变了才发事件 |
+| `power_mgmt` | `src/power_mgmt.c` | 每 12 秒踢一脚 PMIC 防止它睡着；通过 ADC 电压计算电量，通过 IP5305T 0x71 判断充电状态 |
+| `encoder` | `src/encoder.c` | 初始化 QDEC，接收 EC11 旋转触发并广播 encoder_event |
+| `keyboard_core` | `src/keyboard_core.c` | 消费 button_event，生成键盘/消费者 HID 报告事件 |
+| `usb_transport` | `src/usb_transport.c` | 消费 HID 报告事件并通过 USB Device Stack Next 发送 |
+| `ble_transport` | `src/ble_transport.c` | 消费 HID 报告事件并通过 BLE HIDS 发送，管理广播、连接和配对 |
+| `lcd_display` | `src/lcd_display.c` | 第一版 LCD/ST7789 点亮诊断与色块测试，不接入事件流 |
 | `mode_event` | `src/events/mode_event.c` | 定义 mode_event 这个事件类型，以及它在串口上的打印格式 |
 | `battery_event` | `src/events/battery_event.c` | 定义 battery_event 这个事件类型，以及它在串口上的打印格式 |
 
@@ -84,8 +95,8 @@ mode_poll_handler (可延迟工作项, 5 秒周期)
 wakeup_work_handler (可延迟工作项, 12 秒周期)  │
   │                                          │
   ├── 拉低 WAKEUP 脚 200ms (踢一脚 PMIC)      │
-  ├── I2C 读取 IP5305T 状态寄存器             │
-  ├── 如果 I2C 不通 → 走电压估算回路           │
+  ├── ADC 读取电池电压并换算电量               │
+  ├── I2C 读取 IP5305T 0x71 判断充电状态       │
   ├── new_battery_event()  分配事件对象       │
   │    APP_EVENT_SUBMIT(event) ──────────────┤
   └── k_work_schedule()  预定下一次唤醒       │
@@ -111,5 +122,5 @@ wakeup_work_handler (可延迟工作项, 12 秒周期)  │
 - **硬件参数全部写进设备树**：引脚编号、分压电阻值、I2C 地址这些东西，统统定义在 `.overlay` 文件里。应用代码里只用 `DEVICE_DT_GET` / `I2C_DT_SPEC_GET` 这类宏去取。换一块板子只需要改设备树，不用动 C 代码。
 - **事件驱动 = 模块零耦合**：这是整个架构的灵魂。每个模块独立运行自己的定时任务，产出的数据通过事件总线广播。新增任何一个订阅者都不用修改生产者代码。
 - **变化才广播，不变就闭嘴**：`mode_switch` 模块在提交事件前会先检查 "这次读到的档位和上次一样吗？"。物理拨档开关一天可能只拨一次，凭什么每 500ms 发一次重复事件？5 秒轮询 + 变化检测，噪声直接从洪灾降到涓流。
-- **I2C 优先，电压兜底**：电池电量优先找 IP5305T 这颗电源芯片要（它能直接告诉你百分比）。万一它睡着了 I2C 不通，备选方案是通过电压分压器读电池电压，用线性插值算出大概还剩多少电。
-- **编译期直接把调试日志砍掉**：`CONFIG_LOG_DEFAULT_LEVEL=1` 配置下，所有 `LOG_INF` 和 `LOG_DBG` 在编译阶段就没了——不是运行时过滤，是压根不编译进固件。最终镜像里只有 `LOG_ERR` 和 `APP_EVENT_MANAGER_LOG`（如果配置了的话）。
+- **ADC 电量，I2C 状态**：当前周期性 `battery_event` 使用电池分压 ADC 电压计算电量百分比，IP5305T I2C 只用于读取充电状态。
+- **编译期日志过滤**：`CONFIG_LOG_DEFAULT_LEVEL` 控制日志编译级别。当前 `prj.conf` 是 3，适合开发观察；生产环境可降到 1，仅保留错误。

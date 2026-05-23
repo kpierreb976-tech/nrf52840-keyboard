@@ -14,6 +14,7 @@ LOG_MODULE_REGISTER(MODULE, MAIN_LOG_LEVEL);
 #include "encoder.h"
 #include "ble_transport.h"
 #include "keyboard_core.h"
+#include "lcd_display.h"
 #include "mode_switch.h"
 #include "power_mgmt.h"
 #include "usb_transport.h"
@@ -47,6 +48,11 @@ int main(void)
     if (keyboard_core_init() != 0)
     {
         LOG_ERR("Keyboard core init failed");
+    }
+
+    if (lcd_display_init() != 0)
+    {
+        LOG_ERR("LCD display init failed");
     }
 
     if (usb_transport_init() != 0)

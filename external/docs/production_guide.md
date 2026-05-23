@@ -77,12 +77,16 @@ CONFIG_ASSERT=y                   # 出现逻辑错误立即 halt，方便定位
 # ═══════════════════════════════════════════
 CONFIG_GPIO=y                     # 按键、VBUS、WAKEUP 都需要
 CONFIG_I2C=y                      # 跟 IP5305T 通信用
+CONFIG_SPI=y                      # LCD/ST7789 使用 SPI3
+CONFIG_DISPLAY=y                  # Zephyr display 子系统
+CONFIG_ST7789V=y                  # ST7789V display 驱动
+CONFIG_ST7789V_RGB565=y           # 第一版 LCD 使用 RGB565
 
 # ═══════════════════════════════════════════
 # 日志 (生产: 只看错误)
 # ═══════════════════════════════════════════
 CONFIG_LOG=y
-CONFIG_LOG_DEFAULT_LEVEL=1        # ▼ 改这里控制日志量
+CONFIG_LOG_DEFAULT_LEVEL=3        # 当前开发配置；生产环境可降为 1
 CONFIG_CONSOLE=y
 CONFIG_USE_SEGGER_RTT=y           # 用 J-Link RTT 通道输出
 CONFIG_RTT_CONSOLE=y
@@ -149,9 +153,9 @@ CONFIG_ASSERT=y                                       # 断言保持开启
 
 ### 3.3 IP5305T I2C 读不到数据
 
-症状：串口出现 `LOG_ERR("Failed to read IP5305T status: %d", ret)`
+症状：串口出现 IP5305T I2C 读取失败，或电池事件停止更新。
 
-此时固件会自动切换到电压估算备选方案——功能不中断，但电量显示精度会下降。排查方向：
+当前周期性电量事件以 ADC 电压为电量来源，I2C 主要用于读取 IP5305T `0x71` 充电状态。若 I2C 失败，本轮电池事件可能被跳过。排查方向：
 
 - PMIC 深度休眠了（WAKEUP 脉冲没踢到它）→ 检查 P0.22 的 GPIO 配置和电平
 - I2C 总线冲突 → 万用表量一下 SDA/SCL 上有没有上拉电阻，波形是否正常
@@ -160,7 +164,7 @@ CONFIG_ASSERT=y                                       # 断言保持开启
 ### 3.4 档位开关永远报同一个模式
 
 - 电压阈值跟实际分压对不上 → 用 LOG_DBG 级别看看原始 ADC 读数，重新校准阈值
-- `power-gpios` 可能在 ADC 采样前没有拉高 → 检查 P0.09 (BAT_ADC_EN) 的电平时序
+- 当前 `mode_sense` 使用 AIN5，没有独立 `power-gpios`。若档位异常，优先检查 AIN5 分压点电压和 `mode_switch.c` 中 800mV / 2500mV 阈值。
 - 开关本身接触不良 → 硬件问题，万用表直接量分压点电压
 
 ### 3.5 设备不睡觉（功耗居高不下）

@@ -32,7 +32,7 @@ qdec_default: qdec_default {
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    USB HID 发送层（待实现）                │
+│                    USB/BLE HID 发送层                       │
 │   key_id: 0x180 → MUTE (0x00E2)                         │
 │   key_id: 0x00E9 → Volume Up                            │
 │   key_id: 0x00EA → Volume Down                          │
@@ -80,7 +80,7 @@ EC11 按下 → 矩阵 COL3/ROW0 导通 → CAF Buttons 扫描
 
 ### 4.2 静音翻译：在 HID 发送端完成
 
-`0x180` 到 USB HID Consumer Control 静音码 `0x00E2` 的映射，**不在事件层做**，而是在 USB HID 报告生成层（后续实现）统一翻译。
+`0x180` 到 HID Consumer Control 静音码 `0x00E2` 的映射不在编码器事件层做，而是在当前 `keymap.c` 中统一声明，由 `keyboard_core` 生成 `hid_consumer_report_event`，再分别交给 USB/BLE 传输层发送。
 
 | 来源 | key_id | HID Usage | 含义 |
 |------|--------|-----------|------|

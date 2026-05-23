@@ -1,0 +1,2 @@
+osource "C:/NRF/KEYBOARD/boards/shields/*/Kconfig.shield"
+osource "C:/ncs/v3.2.3/nrf/boards/shields/*/Kconfig.shield"

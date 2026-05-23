@@ -16,8 +16,13 @@
  */
 
 #include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
 
 / {
+    chosen {
+        zephyr,display = &display;
+    };
+
     vbatt: vbatt {
         compatible = "voltage-divider";
         io-channels = <&adc 7>;
@@ -47,6 +52,80 @@
     ip5305t_wakeup: ip5305t-wakeup {
         gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
     };
+
+    lcd_backlight_ctrl {
+        compatible = "gpio-leds";
+
+        lcd_backlight: lcd_backlight {
+            gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+            label = "LCD Backlight";
+        };
+    };
+
+/*
+ * MIPI DBI SPI ST7789V 显示设备。
+ * 由 Zephyr display driver 接管硬件初始化（上电序列、窗口、像素写入），
+ * LVGL 通过 display API 渲染，自定义 flush_cb 不再需要。
+ */
+mipi_dbi: mipi-dbi-spi {
+    compatible = "zephyr,mipi-dbi-spi";
+    spi-dev = <&spi3>;
+    dc-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+    reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+    write-only;
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    display: st7789v@0 {
+        compatible = "sitronix,st7789v";
+        reg = <0>;
+        mipi-max-frequency = <8000000>;
+        mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
+        width = <320>;
+        height = <172>;
+        x-offset = <0>;
+        y-offset = <35>;
+        vcom = <0x20>;
+        gctrl = <0x35>;
+        mdac = <0xa0>;
+        lcm = <0x2c>;
+        colmod = <0x55>;
+        gamma = <0x04>;
+        porch-param = [0c 0c 00 33 33];
+        cmd2en-param = [ff ff ff];
+        pwctrl1-param = [a4 a1];
+        pvgam-param = [f0 00 04 04 05 07 32 34 3d 08 11 0f 2c 33];
+        nvgam-param = [f0 07 09 04 0c 08 2e 2b 2b 18 16 11 30 33];
+        ram-param = [00 f0];
+        rgb-param = [cd 08 14];
+    };
+};
+
+};
+
+&pinctrl {
+    spi3_default: spi3_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 1, 13)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 28)>;
+        };
+    };
+
+    spi3_sleep: spi3_sleep {
+        group1 {
+            psels = <NRF_PSEL_DISCONNECTED(SPIM_SCK)>,
+                    <NRF_PSEL_DISCONNECTED(SPIM_MOSI)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi3 {
+    status = "okay";
+    pinctrl-0 = <&spi3_default>;
+    pinctrl-1 = <&spi3_sleep>;
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
 };
 
 /*

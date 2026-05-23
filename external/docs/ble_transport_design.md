@@ -18,18 +18,30 @@
 - 使用 Zephyr settings 后端保存蓝牙 bonding 信息，避免断电后每次重新配对。
 - 传输层只消费 HID 事件，不反向读取 `keyboard_core` 内部状态，保持单职权边界。
 
-## 2. 设备树审计
+## 2. 设备树与分区审计
 
-当前 `C:/NRF/KEYBOARD/boards/arm/key_board/key_board.overlay` 已归位。
+当前 `C:/NRF/KEYBOARD/key_board.overlay` 已归位。
 
 已确认：
 
 - `&usbd { status = "okay"; }` 已存在，USB 传输层继续可用。
 - `hid_dev_0` 节点已存在，用于 USB HID 设备。
 
-已确认实际 board DTS `boards/atjialidun/key_board/key_board.dts` 已包含固定分区：
+### 2.1 板级 DTS 固定分区
+
+实际 board DTS `boards/atjialidun/key_board/key_board.dts` 包含以下固定分区：
 
 ```dts
+boot_partition: partition@0 {
+    label = "mcuboot";
+    reg = <0x00000000 DT_SIZE_K(48)>;
+};
+
+slot0_partition: partition@c000 {
+    label = "image-0";
+    reg = <0x0000c000 DT_SIZE_K(944)>;
+};
+
 storage_partition: partition@f8000 {
     label = "storage";
     reg = <0x000f8000 DT_SIZE_K(32)>;
@@ -38,13 +50,44 @@ storage_partition: partition@f8000 {
 
 说明：
 
-- 当前项目已经采用 MCUboot + 双镜像分区：`mcuboot`、`image-0`、`image-1`、`storage`。
-- BLE bonding / CCCD / settings 直接复用现有 32KB `storage_partition`。
+- DTS 静态布局预留了 32KB `storage_partition`，地址范围为 `0x000f8000` 至 `0x000fffff`。
 - overlay 中禁止再次定义 `storage_partition`，否则会触发 devicetree label 重复错误。
+- 当前 board DTS 只定义 `mcuboot`、`image-0`、`storage`，没有定义 `image-1`。
+
+### 2.2 当前构建实际 settings 分区
+
+当前 `build_debug` 使用 Partition Manager，实际 `build_debug/partitions.yml` 中分区为：
+
+```yaml
+app:
+  address: 0x0
+  end_address: 0xfe000
+  size: 0xfe000
+
+settings_storage:
+  address: 0xfe000
+  end_address: 0x100000
+  size: 0x2000
+```
+
+因此当前固件运行时，BLE bonding / CCCD / settings 实际写入 Partition Manager 生成的 8KB `settings_storage`，地址范围为 `0x000fe000` 至 `0x000fffff`，而不是完整 32KB `storage_partition`。
+
+当前 `.config` 对应配置：
+
+```conf
+CONFIG_PM_PARTITION_SIZE_SETTINGS_STORAGE=0x2000
+CONFIG_SETTINGS_NVS_SECTOR_COUNT=8
+```
+
+结论：
+
+- 源码层面保留 32KB `storage_partition` 作为板级固定分区设计。
+- 当前构建实际使用 8KB `settings_storage` 作为 settings/NVS 后端。
+- BLE 单主机配对当前使用 8KB settings 分区通常足够；若后续扩展多主机、更多持久化状态或频繁写入，应统一 Partition Manager 与 DTS 分区策略，并考虑把 settings 分区固定为 32KB。
 
 ## 3. Kconfig 校验
 
-需要新增以下配置项：
+当前 `prj.conf` 已启用并需要保持以下配置项：
 
 ```conf
 # ==============================================================================
@@ -77,7 +120,7 @@ CONFIG_BT_GATT_CLIENT=n
 说明：
 
 - `CONFIG_BT_SETTINGS` + `CONFIG_SETTINGS` 用于恢复配对信息。
-- `CONFIG_NVS` + `CONFIG_SETTINGS_NVS` 使用 flash 分区作为 settings 后端。
+- `CONFIG_NVS` + `CONFIG_SETTINGS_NVS` 使用 flash 分区作为 settings 后端；当前实际后端为 Partition Manager 生成的 8KB `settings_storage`。
 - `CONFIG_BT_MAX_PAIRED=1` 对应单主机键盘。后续多主机场景可扩展为 3。
 - `CONFIG_BT_GATT_CLIENT=n` 保持外设侧 HID 键盘职责，不启用不需要的 GATT Client。
 
@@ -267,6 +310,7 @@ e:ble_state state=0 connected=0 bonded=1 err=0
 - 当前 USB HID 事件注册文件的 `log_event` 参数仍为 `NULL`，后续建议单独补齐日志，以满足事件总线可观测要求。
 - BLE 与 USB 同时订阅 HID 事件时，必须由档位状态决定是否实际发送，避免非当前传输通道误发。
 - flash 分区一旦写入 bonding 信息，后续改动分区布局可能需要用户手动清理存储区。
+- 当前构建实际使用 8KB `settings_storage` 保存 BLE bonding / CCCD / settings；若后续扩大配对数量或持久化内容，需要同步调整 Partition Manager 的 settings 分区大小，避免文档、DTS 和实际镜像布局不一致。
 - 本方案暂不实现多主机切换；后续可基于 `CONFIG_BT_MAX_PAIRED=3` 和主机槽位事件扩展。
 
 ## 10. 用户主动清理配对后的 Identity 轮换策略

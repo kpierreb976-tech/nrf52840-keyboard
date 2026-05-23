@@ -1,0 +1,7 @@
+default: KEYBOARD
+build_dir: C:/NRF/KEYBOARD/build_release
+domains:
+  - name: KEYBOARD
+    build_dir: C:/NRF/KEYBOARD/build_release/KEYBOARD
+flash_order:
+  - KEYBOARD
